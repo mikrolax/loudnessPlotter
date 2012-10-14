@@ -10,44 +10,53 @@ Installation
 ==============
 ## Download
 Using git:
-  cd /home/user/mypath
-  git clone https://github.com/mikrolax/loudnessPlotter.git
+
+    cd /home/user/mypath
+    git clone https://github.com/mikrolax/loudnessPlotter.git
 
 ## Compil
 * For unix-like platform (linux, MAC OS):
 
-	cd ebu_r128
-	make wave_analyze
-  cp wave_analyze ../
+	  cd ebu_r128
+	  make wave_analyze
+    cp wave_analyze ../
 
 * Windows
 wave_analyze binarie is provided. If you need you can compil it with minGW, take a look at Codeblocks IDE as it can be bundle with it.
 
 
- Usage
+Usage
 =======
 
 ### Windows
 Binaries are provided, simply open the command line and type:
-	loudnesspplotter.exe [file.wav or folder] [oupoutfolder]
+
+    loudnesspplotter.exe [file.wav or folder] [oupoutfolder]
 
 ### from python (All platform)
 Make sure you have the compiled the wave_analyse programm for your platform! If not, see later.
 
 As a script:
-  python loudness.py /path/to/folder/or/wavefile
+
+    python loudness.py /path/to/folder/or/wavefile
   
 As a module:
-	import loudness
-	loudness.LoudnessPlotter(wavfilelist,outpath).process()
+
+    import loudness
+    loudness.LoudnessPlotter(wavfilelist,outpath).process()
 
 
- License
+License
 ==========
 [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.txt)
 
 
- Credits
+Credits
 ==========
-[radionova labs](http://labs.radionova.no/2011/01/07/ebu-r128-library/) for providing this lib and wavanalyze example under GNU GPL.
+[radionova labs](http://labs.radionova.no/2011/01/07/ebu-r128-library/) for providing this lib and wave_analyze example under GNU GPL.
+
+
+####Links
+https://en.wikipedia.org/wiki/Loudness
+https://en.wikipedia.org/wiki/Loudness_monitoring
 
