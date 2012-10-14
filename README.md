@@ -5,15 +5,33 @@ Analyse wav file loudness and plot graph in html
 
 loudnessPlotter is based on wave_analyze program, writen in C by [radionova labs](http://labs.radionova.no/2011/01/07/ebu-r128-library/). Original source code is provided in ebu_r128 folder.
 
+
+Installation
+==============
+## Download
+Using git:
+  cd /home/user/mypath
+  git clone https://github.com/mikrolax/loudnessPlotter.git
+
+## Compil
+* For unix-like platform (linux, MAC OS):
+
+	cd ebu_r128
+	make wave_analyze
+  cp wave_analyze ../
+
+* Windows
+wave_analyze binarie is provided. If you need you can compil it with minGW, take a look at Codeblocks IDE as it can be bundle with it.
+
+
  Usage
 =======
 
-## Windows
+### Windows
 Binaries are provided, simply open the command line and type:
 	loudnesspplotter.exe [file.wav or folder] [oupoutfolder]
 
-
-#### from python (All platform)
+### from python (All platform)
 Make sure you have the compiled the wave_analyse programm for your platform! If not, see later.
 
 As a script:
@@ -24,11 +42,12 @@ As a module:
 	loudness.LoudnessPlotter(wavfilelist,outpath).process()
 
 
-Compilation
-============
-For unix-like platform (linux, MAC OS)
+ License
+==========
+[GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.txt)
 
-	cd ebu_r128
-	make wave_analyze
-	
+
+ Credits
+==========
+[radionova labs](http://labs.radionova.no/2011/01/07/ebu-r128-library/) for providing this lib and wavanalyze example under GNU GPL.
 
