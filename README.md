@@ -15,13 +15,13 @@ Using git:
     git clone https://github.com/mikrolax/loudnessPlotter.git
 
 ## Compil
-* For unix-like platform (linux, MAC OS):
+### For unix-like platform (linux, MAC OS):
 
 	  cd ebu_r128
 	  make wave_analyze
     cp wave_analyze ../
 
-* Windows
+### Windows
 wave_analyze binarie is provided. If you need you can compil it with minGW, take a look at Codeblocks IDE as it can be bundle with it.
 
 
