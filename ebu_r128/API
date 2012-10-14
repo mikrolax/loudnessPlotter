@@ -1,0 +1,143 @@
+Loudness analyze library
+========================
+
+API
+---
+
+1. Initialize the library, filters etc.
+
+    int ebu_r128_init(s_ebu_r128 *cfg, unsigned char channels, unsigned char resolution, unsigned int samplerate ,unsigned char mode);
+
+    - channels: (number of channels in the audio stream), typically 1,2 or 5
+    - resolution: (number of bits per sample), typically 16, 24, 32    
+    - samplerate: (number of samples per second, typically 48000). 
+    - mode: EBU_MODE_INTEGRATED (i), EBU_MODE_MOMENTARY (m), EBU_MODE_SHORT_TERM (s)
+
+    Returns: 0 if problem (error message is sent to stderr)
+	     1 if ok
+
+    NOTE: only 8, 16, 24 and 32 is supported. Other samplerates than 48000 causes calculation of filter coefficients. These values might be inaccurate.
+
+
+
+2. Adjust the gain of the channels (if needed)
+
+    int ebu_r128_adjust_gain(s_ebu_r128 *cfg, unsigned char channel, float gain);
+
+    - channel: [0, 1, 2 ...]
+    - gain: number of dB gain to add (usually 0 or 1.5dB)
+
+    Returns: 0 if problem (error message is sent to stderr)
+	     1 if ok
+
+    NOTE: The init function assumes the multichannel format L R C Ls Rs, and amplifies Ls and Rs by 1.5dB automatically. Any other channels (Lfe etc) are muted.
+	  Use this function only if you have a different trackorder, and know why and what your doing.
+
+
+
+3. Adjust the relative gate (if needed, currently defaults to 8dB below)
+
+    int ebu_r128_adjust_relative_gain(s_ebu_r128 *cfg, signed char relative_gate);
+
+    - relative_gate: typically 8 or 10
+
+    Returns: 0 if problem (error message is sent to stderr)
+	     1 if ok
+
+
+
+4.  Put audio data into the library (and calculate)
+
+    int ebu_r128_process_samples(s_ebu_r128 *cfg, void *audio, size_t num_samples);
+
+    - audio: the library expects audio to be interleaved; e.g. ch1 ch2 c1 ch2, with the resolution supplied in ebu_r128_init
+    - samples: number of samples available in the audiobuffer. 
+
+    Returns: 0 if problem (errormessage is sent to stderr)
+	     1 if ok
+	     2 if ok and a new Lk value is available for display
+
+    NOTE: audio_buffer_size = samples * channels,  or 1 "sample" is actually <channels> samples.
+
+
+
+5. If mode == EBU_MODE_INTEGRATED, calculate integrated value
+
+    float ebu_r128_get_integrated_lufs(s_ebu_r128 *cfg);
+
+    Returns:  the integrated Lkfs value of the currently processed samples
+
+    NOTE: Should be run at completion of decoding
+
+
+
+6. When done, cleanup
+
+    int ebu_r128_destroy(s_ebu_r128 *cfg);
+
+    Returns: 0 if problem (errormessage is sent to stderr)
+	     1 if ok
+
+    NOTE: Currently, always returns 1
+
+
+TYPICAL API USAGE
+-----------------
+
+#include "ebu_r128.h"
+
+...
+
+    s_ebu_r128 config;  // All parameters, filters etc.
+
+    unsigned char channels=2;       // stereo
+    unsigned char resolution=16;    // 16 bit
+    unsigned int sample_rate=48000; // 48kHz
+    unsigned char ebu_mode = EBU_MODE_INTEGRATED;  // (i)   or  EBU_MODE_MOMENTARY (m), EBU_MODE_SHORT_TERM (s)
+
+    if (!ebu_r128_init(&config, channels, resolution, sample_rate, ebu_mode )) { 
+	// Init failed!
+	ebu_r128_destroy(&config);
+	return 0;
+    }
+
+    short audiobuffer[channels*BUFFER_SAMPLES];  // BUFFER_SAMPLES can be any number, e.g. 1152 for mp3
+    
+
+    while (still_more_audio) { 
+	
+	size_t samples = put_some_audio_in(audiobuffer, BUFFER_SAMPLES); // your code to get audio into the buffer.
+
+	int ret = ebu_r128_process_samples(&config, &audiobuffer, samples);
+
+
+	    if (!ret) {
+		// Something nasty happened!
+	        ebu_r128_destroy(&config);		
+		return 0;
+	    }
+
+
+	    if (ret == 2) {  // There is a new value available...
+
+		if (config.mode == EBU_MODE_INTEGRATED) {
+		    float lk=ebu_r128_get_integrated_lufs(&config);
+		    fprintf(stdout, "Current Lk=%.2f LUFS,  %.2f LU\n", lk,  lk + 23);
+		} else {
+	    	    fprintf(stdout, "Current Lk=%.2f LUFS,  %.2f LU\n", config.lk,  config.lk + 23);
+		}	
+
+	    }
+
+    }
+
+    // end of audio data
+    if (config.mode == EBU_MODE_INTEGRATED) {
+	float lk=ebu_r128_get_integrated_lufs(&config);
+	fprintf(stdout, "Final Lk=%.2f LUFS,  %.2f LU\n", lk,  lk + 23);
+    }
+
+
+    // Cleanup
+    ebu_r128_destroy(&config);
+

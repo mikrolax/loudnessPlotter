@@ -1,0 +1,81 @@
+Loudness analyze library
+========================
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
+
+
+
+INTRODUCTION
+------------
+
+    This library provides an implementation of the EBU recommendation 128 -
+    "Loudness normalization and permitted maximum level of audio signals."
+
+    This is an initial release, and there are certainly bugs and potential for
+    improvement. Please report bugs and suggestions to labs@radionova.no.
+
+    Please study the information on http://tech.ebu.ch/loudness for more information.
+
+    Note: We have no affiliation to EBU organization.
+
+
+WHAT IS THIS AND WHAT IS IT USED FOR?
+-------------------------------------
+
+    This library does analysis of audio and gives a number representing the loudness
+    of the audio. It can be used both for live metering (typically for broadcasting)
+    and offline analyze of audio files (typically normalising ala Replay Gain). 
+
+    The EBU recommends normalizing audio to -23LUFS.
+
+    The library is provided as source with example programs. It's tested with GCC on
+    Linux, but porting to other platforms should be fairly easy.
+    
+
+
+DEPENDENCIES
+------------
+
+    Recent versions of libavformat-dev and libavcodec-dev (for example program only)
+
+
+
+INSTALLATION
+------------
+
+    make
+
+    this will compile the library and example programs. 
+
+
+
+EXAMPLE PROGRAMS
+----------------
+
+wave_analyze:
+use: ./wave_analyze <filename.wav> [ebu_mode (m,s,i)]
+    - Only analyzes Wave/PCM files 
+    - Defaults to EBU MODE i as default
+
+
+ffmpeg_analyze:
+use: ./ffmpeg_analyze <filename> [ebu_mode (m,s,i) [audiostream_id] ]
+    - Will analyze any file that ffmpeg/libavcodec is capable of decoding
+    - If more than 1 audio tracks, it automatically selects the first. 
+    - If you like to analyze a different track, set the ebu_mode and audiostream_id  
+      (useful for transport streams with both stereo and 5.1 tracks)
+
+
+

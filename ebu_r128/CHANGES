@@ -1,0 +1,27 @@
+Changes since last version
+==========================
+
+ffmpeg_analyze: better detection of correct channels (reads the info from ffmpeg decoder if available)
+
+ebu_r128:	adjusted the windowsize of integrated mode to properly overlap
+		added option to change relative gate (expected to switch from 8 to 10dB in the future), see api for more info
+
+
+
+
+Current results on ebu-loudness-test-setv01.zip
+===============================================
+
+seq-3341-1-16bit.wav			Lk=-22.98 LUFS,    0.02 LU	Deviation:   0.02LU
+seq-3341-2-16bit.wav			Lk=-32.98 LUFS,   -9.98 LU	Deviation:   0.02LU
+seq-3341-3-16bit.wav			Lk=-23.00 LUFS,    0.00 LU	Deviation:   0.00LU
+seq-3341-4-16bit.wav			Lk=-23.04 LUFS,   -0.04 LU	Deviation:   0.04LU
+seq-3341-5-16bit.wav			Lk=-22.96 LUFS,    0.04 LU	Deviation:   0.04LU
+seq-3341-6-5channels-16bit.wav		Lk=-23.04 LUFS,   -0.04 LU	Deviation:   0.04LU
+seq-3341-6-6channels-WAVEEX-16bit.wav	Lk=-23.04 LUFS,   -0.04 LU	Deviation:   0.04LU
+seq-3341-7_seq-3342-5-24bit.wav		Lk=-22.99 LUFS,    0.01 LU	Deviation:   0.01LU
+seq-3341-8_seq-3342-6-24bit.wav		Lk=-23.01 LUFS,   -0.01 LU	Deviation:   0.01LU
+
+1kHz Sine -20 LUFS-16bit.wav		Lk=-19.98 LUFS,    3.02 LU	Deviation:   0.02LU
+1kHz Sine -26 LUFS-16bit.wav		Lk=-25.98 LUFS,   -2.98 LU	Deviation:   0.02LU
+1kHz Sine -40 LUFS-16bit.wav		Lk=-40.01 LUFS,  -17.01 LU	Deviation:   0.01LU
