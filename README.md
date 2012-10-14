@@ -3,7 +3,7 @@ loudnessPlotter
 
 Analyse wav file loudness and plot graph in html 
 
-`loudnessPlotter` is based on ebu_r128 lib writen in C by [radionova labs](http://labs.radionova.no/2011/01/07/ebu-r128-library/). Original source code is provided in ebu_r128 folder.
+`loudnessPlotter` is based on ebu_r128 lib writen in C by [radionova labs](http://labs.radionova.no/2011/01/07/ebu-r128-library/). Original source code is provided.
 
 
 Installation
