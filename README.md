@@ -46,6 +46,15 @@ As a module:
     loudness.LoudnessPlotter(wavfilelist,outpath).process()
 
 
+What it does
+=============
+Generate a single HTML page (which itself load some javascript from the web): launches wav_analyze executable, get its output, and convert it into an HTML plot.
+
+If you specifie a folder, all .wav under this folder will be analysed, output HTML file name will be : `loudness.html`
+If you specifie a wav file i.e. `wavfilename.wav`, output HTML file name will be : `wavfilename.html`
+
+
+
 License
 ==========
 [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -53,10 +62,14 @@ License
 
 Credits
 ==========
+
 [radionova labs](http://labs.radionova.no/2011/01/07/ebu-r128-library/) for providing this lib and wave_analyze example under GNU GPL.
+
+[JQuery](http://jquery.com/), the well-known javascript library 
+[flot](http://www.flotcharts.org/) an attactive javascript plotting for JQuery
+[Bootstrap](http://twitter.github.com/bootstrap/) the famous CSS/JS framework from Twitter. 
 
 
 ####Links
 https://en.wikipedia.org/wiki/Loudness
 https://en.wikipedia.org/wiki/Loudness_monitoring
-
