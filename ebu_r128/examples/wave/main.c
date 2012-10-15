@@ -1,6 +1,6 @@
 /*
  *  Loudness analyze library
- *  implementing EBU R.128  
+ *  implementing EBU R.128
  *
  *  Example program with simple wave/pcm library
  *
@@ -16,9 +16,9 @@
 int main(int argc, char * argv[]) {
 
     if (argc != 2 && argc != 3) {
-	fprintf(stderr, "use: %s <filename.wav> [ebu_mode (m,s,i)]\n", argv[0]);
-	return 0;
-    } 	
+    fprintf(stderr, "use: %s <filename.wav> [ebu_mode (m,s,i)]\n", argv[0]);
+    return 1;
+    }
 
     unsigned char ebu_mode = EBU_MODE_INTEGRATED;
 
@@ -26,18 +26,18 @@ int main(int argc, char * argv[]) {
     s_ebu_r128 config;
 
     if (argc == 3) {
-	unsigned char m=argv[2][0];
+    unsigned char m=argv[2][0];
 
-	switch (m) {
-	    case 'm':
-		ebu_mode=EBU_MODE_MOMENTARY;
-	    break;
+    switch (m) {
+        case 'm':
+        ebu_mode=EBU_MODE_MOMENTARY;
+        break;
 
-	    case 's':
-		ebu_mode=EBU_MODE_SHORT_TERM;
-	    break;
-    
-	}
+        case 's':
+        ebu_mode=EBU_MODE_SHORT_TERM;
+        break;
+
+    }
 
     }
 
@@ -45,24 +45,24 @@ int main(int argc, char * argv[]) {
     FILE *in=fopen(argv[1], "rb");
 
     if (!in)
-	return 0;
+    return 1;
 
     // Parse wave header and find audio data
     if (!parse_wavefile(in, &wave_info)) {
-	fprintf(stderr, "Could not parse wave header\n");
-	fclose(in);
-	return 0;
+    fprintf(stderr, "Could not parse wave header\n");
+    fclose(in);
+    return 1;
     }
 
 
 
 
-    if (!ebu_r128_init(&config, wave_info.channels, wave_info.resolution, wave_info.sample_rate, ebu_mode )) { 
-	fprintf(stderr, "EBU R128 Init failed!\n");
-	ebu_r128_destroy(&config);
+    if (!ebu_r128_init(&config, wave_info.channels, wave_info.resolution, wave_info.sample_rate, ebu_mode )) {
+    fprintf(stderr, "EBU R128 Init failed!\n");
+    ebu_r128_destroy(&config);
 
-	fclose(in);
-	return 0;
+    fclose(in);
+    return 1;
     }
 
     unsigned char bytes_per_sample = (wave_info.resolution / 8);
@@ -71,43 +71,43 @@ int main(int argc, char * argv[]) {
 
     while (!feof(in)){
 
-	memset(audiobuffer, 0, sizeof(audiobuffer));
+    memset(audiobuffer, 0, sizeof(audiobuffer));
 
-	size_t read=fread(&audiobuffer, 1, sizeof(audiobuffer),in);
+    size_t read=fread(&audiobuffer, 1, sizeof(audiobuffer),in);
 
-	if (read > 0) {
-	    unsigned short samples=read / (bytes_per_sample * config.channels);
+    if (read > 0) {
+        unsigned short samples=read / (bytes_per_sample * config.channels);
 
-	    int r=ebu_r128_process_samples(&config, &audiobuffer, samples);
-	
-	    if (!r) {
-		fprintf(stderr, "Error in processing!\n");
-		// destroy
-		fclose(in);
-	        ebu_r128_destroy(&config);		
-		return 0;
-	    }
+        int r=ebu_r128_process_samples(&config, &audiobuffer, samples);
 
-	    if (r == 2) {  // new update
+        if (!r) {
+        fprintf(stderr, "Error in processing!\n");
+        // destroy
+        fclose(in);
+            ebu_r128_destroy(&config);
+        return 1;
+        }
 
-		float lk=config.lk;
+        if (r == 2) {  // new update
 
-		if (config.mode == EBU_MODE_INTEGRATED) {
-    		    // In file mode, we're usually only in to the final Lk value, so skip this calculation to save time
-		    // lk=ebu_r128_get_integrated_lufs(&config);
-		    // fprintf(stdout, "Current Lk=%.2f LUFS,  %.2f LU\n", lk,  lk + 23);
-		} else {
-	    	    fprintf(stdout, "Current Lk=%.2f LUFS,  %.2f LU\n", lk,  lk + 23);
-		}
+        float lk=config.lk;
 
-	    }
-	}
+        if (config.mode == EBU_MODE_INTEGRATED) {
+                // In file mode, we're usually only in to the final Lk value, so skip this calculation to save time
+            // lk=ebu_r128_get_integrated_lufs(&config);
+            // fprintf(stdout, "Current Lk=%.2f LUFS,  %.2f LU\n", lk,  lk + 23);
+        } else {
+                fprintf(stdout, "Current Lk=%.2f LUFS,  %.2f LU\n", lk,  lk + 23);
+        }
+
+        }
+    }
     }
 
 
     if (config.mode == EBU_MODE_INTEGRATED) {
-	float lk=ebu_r128_get_integrated_lufs(&config);
-	fprintf(stdout, "Final Lk=%.2f LUFS,  %.2f LU\n", lk,  lk + 23);
+    float lk=ebu_r128_get_integrated_lufs(&config);
+    fprintf(stdout, "Final Lk=%.2f LUFS,  %.2f LU\n", lk,  lk + 23);
     }
 
 
