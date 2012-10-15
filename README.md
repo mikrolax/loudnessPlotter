@@ -74,9 +74,9 @@ Credits
 
 [radionova labs](http://labs.radionova.no/2011/01/07/ebu-r128-library/) for providing this lib and wave_analyze example under GNU GPL.
 
-[JQuery](http://jquery.com/), the well-known javascript library 
-[flot](http://www.flotcharts.org/) an attactive javascript plotting for JQuery
-[Bootstrap](http://twitter.github.com/bootstrap/) the famous CSS/JS framework from Twitter. 
+[JQuery](http://jquery.com/), the well-known javascript library   
+[flot](http://www.flotcharts.org/) an attactive javascript plotting for JQuery      
+[Bootstrap](http://twitter.github.com/bootstrap/) the famous CSS/JS framework from Twitter.        
 
 
 ####Links
