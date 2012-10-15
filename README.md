@@ -14,16 +14,26 @@ Using git:
     cd /home/user/mypath
     git clone https://github.com/mikrolax/loudnessPlotter.git
 
-## Compil
-### For unix-like platform (linux, MAC OS):
 
+## Compilation
+### For unix-like platform (linux, MAC OS):
+ 
     cd ebu_r128
     make wave_analyze
     cp wave_analyze ../
 
-### Windows
-`wave_analyze.exe` binarie is provided. If you need you can compil it with minGW, take a look at Codeblocks IDE as it can be bundle with it.
 
+### Windows
+`wave_analyze.exe` binarie is provided.  
+
+If you need you can compil it with minGW, take a look at Codeblocks IDE as it can be bundle with it.
+So assuming you have mingw installed:
+
+    cd ebu_r128
+    mingw32-make wave_analyze
+    copy wave_analyze ..\
+   
+   
 
 Usage
 =======
@@ -54,7 +64,6 @@ If you specifie a folder, all .wav under this folder will be analysed, output HT
 If you specifie a wav file i.e. `wavfilename.wav`, output HTML file name will be : `wavfilename.html`
 
 
-
 License
 ==========
 [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -71,5 +80,10 @@ Credits
 
 
 ####Links
-https://en.wikipedia.org/wiki/Loudness
-https://en.wikipedia.org/wiki/Loudness_monitoring
+
+https://en.wikipedia.org/wiki/Loudness   
+https://en.wikipedia.org/wiki/Loudness_monitoring   
+
+[EBU Website](http://tech.ebu.ch/loudness)   
+[ITU Rec BS1770](http://www.itu.int/rec/R-REC-BS.1770/en)   
+
