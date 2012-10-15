@@ -14,6 +14,7 @@ Using git:
     cd /home/user/mypath
     git clone https://github.com/mikrolax/loudnessPlotter.git
 
+Zip downlod:  [here](https://github.com/mikrolax/loudnessPlotter/zipball/master)
 
 ## Compilation
 ### For unix-like platform (linux, MAC OS):
@@ -41,7 +42,7 @@ Usage
 ### Windows
 Binaries are provided, simply open the command line and type:
 
-    loudnesspplotter.exe [file.wav or folder] [oupoutfolder]
+    loudnessPlotter.exe [file.wav or folder] [oupoutfolder]
 
 ### from python (All platform)
 Make sure you have the compiled the `wave_analyse` programm for your platform! If not, see above.
@@ -60,7 +61,7 @@ What it does
 =============
 Generate a single HTML page (which itself load some javascript from the web): launches wav_analyze executable, get its output, and convert it into an HTML plot.
 
-If you specifie a folder, all .wav under this folder will be analysed, output HTML file name will be : `loudness.html`
+If you specifie a folder, all .wav under this folder will be analysed, output HTML file name will be : `loudness.html`   
 If you specifie a wav file i.e. `wavfilename.wav`, output HTML file name will be : `wavfilename.html`
 
 
