@@ -5,6 +5,7 @@ from string import Template
 import os
 import subprocess
 import glob
+import sys
 
 __version__='0.1.0'
 __author__='seb@mikrolax.me'
@@ -57,11 +58,9 @@ tpl_CDN='''<!DOCTYPE html>
         <dt> Y axis value : </dt><dd> LUFS </dd>
         <dt> X axis value :</dt><dd> seconds </dd>
       </dl>
-      </div>
             
     <footer>
       <hr>
-      <p>report bugs!</p>
       <p class="pull-right"> <a href="https://github.com/mikrolax/loudnessPlotter">loudnessPlotter</a> - 2012 </p>
     </footer>
   </div>
@@ -125,6 +124,7 @@ tpl_multi_fromCDN='''<!DOCTYPE html>
   <p class="pull-right"> <a href="https://github.com/mikrolax/loudnessPlotter">loudnessPlotter</a> - 2012 </p>
   </footer>
   </div>
+  
   <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
   <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/flot/0.7/jquery.flot.min.js"></script>
@@ -136,10 +136,23 @@ $plots
 
   </body></html>
 '''
+#for py2exe freezing support 
+def we_are_frozen():
+  """Returns whether we are frozen via py2exe.
+  This will affect how we find out where we are located."""
+  return hasattr(sys, "frozen")
+def module_path():
+  """ This will get us the program's directory,
+  even if we are frozen using py2exe"""
+  if we_are_frozen():
+    return os.path.dirname(unicode(sys.executable, sys.getfilesystemencoding( )))
+  else:
+    return os.path.dirname(os.path.abspath(__file__))
+        
 
 def writeHTML(loudnessdata,htmlout):
   """    Write a single self-contained HTML page with graph. """
-  print 'writeHTML %s' %os.getcwd()
+  #print 'writeHTML %s' %os.getcwd()
   fout=open(htmlout+'.html','w')
   s = Template(tpl_CDN)
   htmlstats=HTMLstats(stats(loudnessdata))
@@ -176,7 +189,10 @@ def writeHTML(loudnessdata,htmlout):
   page=s.safe_substitute(filename=os.path.basename(htmlout),htmlstats=htmlstats,datas=datas,options=options) #,options=options
   print 'write %s' %htmlout+'.html'
   fout.write(str(page))
-  
+
+
+#check file change?
+
 def stats(loudnessdata):
   """ get min/max/average value of M,S,(I) value. Return a dictionnary  """
   stats={}
@@ -187,7 +203,12 @@ def stats(loudnessdata):
   minVal=0
   avgVal=0
   for item in loudnessdata['M']:
-    data=float(loudnessdata['M'][idx])
+    try:
+      data=float(loudnessdata['M'][idx])
+    except:
+      #print loudnessdata['M'][idx] #weird => : 1.#F
+      data=-1.0
+      pass
     if data > maxVal:
       maxVal=data
     elif data < minVal:
@@ -202,7 +223,12 @@ def stats(loudnessdata):
   minVal=0
   avgVal=0
   for item in loudnessdata['S']:
-    data=float(loudnessdata['S'][idx])
+    try:
+      data=float(loudnessdata['S'][idx])
+    except:
+      #print loudnessdata['S'][idx]
+      data=-1.0
+      pass    
     if data > maxVal:
       maxVal=data
     elif data < minVal:
@@ -212,7 +238,11 @@ def stats(loudnessdata):
   stats['S']['min']=minVal
   stats['S']['max']=maxVal
   stats['S']['avg']='{0:.2f}'.format(avgVal)   
-  stats['I']=float(loudnessdata['I'][0])
+  try:
+    data=float(loudnessdata['I'][0])
+  except:
+    data=-1.0
+  stats['I']=data
   #import pprint
   #pprint.pprint(stats)
   return stats
@@ -231,13 +261,10 @@ def parseLoudnessLog(filepath):
   lines = open(filepath,'r').readlines()
   for line in lines:
     if 'ebu_mode=s' in line:  
-      print 'getting S value'
       key='S'
     if 'ebu_mode=m' in line:  
-      print 'getting M value'    
       key='M'
     if 'ebu_mode=i' in line:  
-      print 'getting I value'    
       key='I'      
     if 'Lk=' in line:
       data=line.rsplit()[1]
@@ -273,36 +300,55 @@ class LoudnessPlotter(object):
     self.filelist=filelist
     self.outpath=outpath
     self.loudnessdata={}
-    print self.filelist
-    print self.outpath
-    self.toolspath=os.path.abspath(os.path.dirname(__file__))   
-    self.wavtoolpath=os.path.join(self.toolspath,'wave_analyze')
-
+    #print self.filelist
+    #print self.outpath
+    self.toolspath=module_path()
+    if sys.platform == 'win32':
+      self.wavtoolpath=os.path.join(self.toolspath,'wave_analyze.exe')
+    else:
+      self.wavtoolpath=os.path.join(self.toolspath,'wave_analyze')
+    self.processed=[]
+    self.failed=[]
+    
   def analyse(self):
-    """ launch wave_analyze executable on each file of self.filelist putting stdout in a file """
+    """ launch wave_analyze executable on each file of self.filelist putting stdout in a file 
+     fills self.processsed file path list
+    """
+    done=0
     for item in self.filelist:
       logfile=item+'_loudness.txt'
       if os.path.isfile(logfile):
-        print 'remove %s' %logfile
+        #print 'remove %s' %logfile
         os.remove(logfile)
+      error_mode=0  
       for ebu_mode in ['m','s','i']:
-        print 'ebu mode %s' %ebu_mode
+        #print 'ebu mode %s' %ebu_mode
         log=open(logfile,'a')
         log.write('ebu_mode=%s\n' %ebu_mode)
         log.flush()
-        cmd=self.wavtoolpath+' '+item+' '+ebu_mode
-        subprocess.call(cmd,stdout=log,shell=True)
+        cmd=self.wavtoolpath+' "'+item+'" '+ebu_mode   
+        #print cmd
+        res=subprocess.call(cmd,stdout=log,shell=True) 
+        if res!=0: 
+          #print 'error analysing %s' %item
+          error_mode+=1 
         log.close()
-
+      if error_mode>0:  
+        self.failed.append(item)     
+      else:       
+        self.processed.append(item)  
+      done+=1
+      print 'progress : %s ' %str(done*100/len(self.filelist))
+        
   def process(self):
     """ base function to parse and write HTML base on internal config """
     if len(self.filelist)==0:
       print 'No file to process. Abort'
       return 1
-    self.analyse()
-    for f in self.filelist:
+    self.analyse() #fills self.processed else flot bugs (no data on one placeholder for width/height seems to affect them all)
+    for f in self.processed:
       self.loudnessdata[os.path.basename(f)]=parseLoudnessLog(f+'_loudness.txt')
-    if len(self.filelist)==1:
+    if len(self.processed)==1:
       self.writeIndividual()
     else :  
       self.write() 
@@ -314,9 +360,16 @@ class LoudnessPlotter(object):
 
   def write(self):
     """ write single HTML file for a list of file"""  
-    print 'loudnessplot::process'
-  
-    tabbedplaceholder='''<div class="tabbable"> 
+    #print 'loudnessplot::process'
+    tabbedplaceholder=''
+    if len(self.failed)>0:    #if some test failed display notif    
+      tabbedplaceholder+='''<div class="alert">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      <strong>Warning! </strong>''' 
+      for item in self.failed:
+        tabbedplaceholder+='''<br>error while processing :'''+os.path.basename(item)
+      tabbedplaceholder+='''</div>'''    
+    tabbedplaceholder+='''<div class="tabbable"> 
                         <!-- <ul class="nav nav-tabs"> -->
                         <ul class="nav nav-pills">
                         '''    
@@ -324,10 +377,10 @@ class LoudnessPlotter(object):
     for f in self.loudnessdata.keys(): 
       name=os.path.splitext(os.path.basename(f))[0]
       if i==0:
-        tabbedplaceholder+='''<li class="active"><a href="#'''+name+'''" data-toggle="tab">'''+name+'''</a></li>
+        tabbedplaceholder+='''<li class="active"><a href="#'''+name.replace(' ','')+'''" data-toggle="tab">'''+name+'''</a></li>
         '''      
       else:
-        tabbedplaceholder+='''<li><a href="#'''+name+'''" data-toggle="tab">'''+name+'''</a></li>
+        tabbedplaceholder+='''<li><a href="#'''+name.replace(' ','')+'''" data-toggle="tab">'''+name+'''</a></li>
         '''
       i+=1      
     tabbedplaceholder+='''</ul><hr>
@@ -338,13 +391,14 @@ class LoudnessPlotter(object):
     for tab in self.loudnessdata.keys():
       name=os.path.splitext(os.path.basename(tab))[0]   
       if j==0:
-        tabbedplaceholder+='''<div class="tab-pane active" id="'''+name+'''"> 
+        tabbedplaceholder+='''<div class="tab-pane active" id="'''+name.replace(' ','')+'''"> 
         ''' 
       else:
-        tabbedplaceholder+='''<div class="tab-pane" id="'''+name+'''">
+        tabbedplaceholder+='''<div class="tab-pane" id="'''+name.replace(' ','')+'''">
         ''' 
+      #print tab  
       tabbedplaceholder+=HTMLstats(stats(self.loudnessdata[tab]))+'''
-      <div id="'''+'placeholder'+name+'''" style="width:850px;height:450px"></div>
+      <div id="'''+'placeholder'+name.replace(' ','')+'''" style="width:850px;height:450px"></div>
       <h4>Legend</h4> 
       <dl class="dl-horizontal">
         <dt> Y axis value : </dt><dd> LUFS </dd>
@@ -387,17 +441,20 @@ class LoudnessPlotter(object):
       datas.append(Idict)
       options='''{}'''
       name=os.path.splitext(os.path.basename(item))[0]
-      plots+='''$.plot($("#placeholder'''+name+'''"), '''+str(datas)+''','''+options+''');             
+      plots+='''$.plot($("#placeholder'''+name.replace(' ','')+'''"), '''+str(datas)+''','''+options+''');             
              '''
     s = Template(tpl_multi_fromCDN)
     page=s.safe_substitute(tabbedplaceholder=tabbedplaceholder,plots=plots) #,options=options
-    print 'write %s' %os.path.join(self.outpath,'loudness.html')
-    open(os.path.join(self.outpath,'loudness.html'),'w').write(page)  
+    print 'write %s' %os.path.join(self.outpath,'loudness.html')            
+    open(os.path.join(self.outpath,'loudness.html'),'w').write(page)       
 
 def cli():
   """ Simple command line interface. Process file or path, based on input args """
-  import sys
-  msg=''' loudnessplotter : analyse and plot loudness in HTML\n usage: python loudnessplotter.py [inpath] [outpath]'''
+  if we_are_frozen():
+    msg=''' loudnessPlotter : analyse and plot loudness in HTML\n usage: loudnessPlotter.py [inpath] [outpath]'''
+  
+  else:
+    msg=''' loudnessPlotter : analyse and plot loudness in HTML\n usage: python loudness.py [inpath] [outpath]'''
   if len(sys.argv) > 1:
     pass
   else:
@@ -407,7 +464,8 @@ def cli():
   outpath=os.path.abspath(sys.argv[2])  
   wavfilelist=[]
   if os.path.isdir(inpath):
-    wavfilelist=glob.glob(os.path.join(inpath,'*.wav'))    
+    wavfilelist=glob.glob(os.path.join(inpath,'*.wav'))
+    print 'nb file to process: %s' %len(wavfilelist)     
   elif os.path.isfile(inpath) and os.path.splitext(inpath)[1]=='.wav' :
     wavfilelist.append(inpath)
   else:
