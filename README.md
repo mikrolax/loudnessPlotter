@@ -5,6 +5,9 @@ Analyse wav file loudness and plot graph in html
 
 `loudnessPlotter` is based on ebu_r128 lib writen in C by [radionova labs](http://labs.radionova.no/2011/01/07/ebu-r128-library/). Original source code is provided.
 
+Application is portable, i.e. can run off a USB key for instance.
+
+
 
 Installation
 ==============
@@ -34,7 +37,11 @@ So assuming you have mingw installed:
     mingw32-make wave_analyze
     copy wave_analyze ..\
    
-   
+Then, if you want, compil the python script using py2exe:
+
+    python setup.py py2exe
+    
+
 
 Usage
 =======
