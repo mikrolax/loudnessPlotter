@@ -341,10 +341,10 @@ def HTMLstats(stats):
     elif key=='I':
       i='''<dt>Integrated</dt> <dd>'''+str(stats['I'])+''' LUFS</dd>'''
     elif key=='LRA':
-      i='''<dt>Loudness RAnge</dt> <dd>'''+str(stats['LRA'])+''' LU</dd>'''    
+      lra='''<dt>Loudness RAnge</dt> <dd>'''+str(stats['LRA'])+''' LU</dd>'''    
     else:
       pass
-  html+=m+s+i    
+  html+=m+s+i+lra    
   html+='''</dl>'''
   return html  
 
