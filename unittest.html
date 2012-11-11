@@ -1,0 +1,130 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <title>loudnessPlotter</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Le styles -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <style>
+          body {
+            padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+          }
+        </style>
+        <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+        <link href="css/sidenav-docs.css" rel="stylesheet">
+
+        <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+          <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+        <!-- Le fav and touch icons -->
+        <!--  <link rel="shortcut icon" href="../assets/ico/favicon.ico">  -->
+        
+        
+        
+      </head>
+
+      <body>
+
+
+
+
+        <div class="navbar navbar-inverse  navbar-fixed-top "><div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="index.html">loudnessPlotter</a><div class="nav-collapse collapse"><ul class="nav"><li class="divider-vertical"></li><li><a href="doc.html">Documentation</a></li><li class="divider-vertical"></li><li><a href="test.html">Test</a></li> </ul>  <ul class="nav pull-right"><li class="divider-vertical"></li><li><a href="https://github.com/mikrolax/loudnessPlotter/issues">Bugs</a></li></ul></div></div></div></div>
+        
+        <div class="container">
+        
+  <div class="container">
+   <h2> Unit Test Results </h3> <hr><div class="well"> module : loudness.py <br> date : 2012-11-11 19:58:32.294867 <br> version : 0.2.0 <br> duration : 0:15:53.522263 <br></div><table class="table">
+            <thead>
+              <tr>
+                <th>Test name</th><th>duration</th><th>Test Nb</th>
+                <th>Errors</th>
+                <th>Failures</th>
+              </tr>
+            </thead>
+            <tbody><tr class="success">  <td> test_build </td><td> 0:00:01.367381 </td><td> 1 </td><td> 0 </td><td> 0 </td></tr><tr class="success">  <td> test_generate </td><td> 0:07:44.071807 </td><td> 4 </td><td> 0 </td><td> 0 </td></tr><tr class="warning">  <td> test_conformance </td><td> 0:07:57.555642 </td><td> 44 </td><td> 0 </td><td> 11 </td></tr><tr class="success">  <td> test_doc </td><td> 0:00:10.519447 </td><td> 2 </td><td> 0 </td><td> 0 </td></tr></tbody></table><div class="alert"><button type="button" class="close" data-dismiss="alert">×</button> <strong> test_itu_10 (test.test_conformance.ConformanceTest) </strong><hr>  Traceback (most recent call last):
+  File "/media/KINGSTON/github/loudnessPlotter/test/test_conformance.py", line 263, in test_itu_10
+    self.assertAlmostEqual(float(plotter.loudnessdata[testfile]['I'][0]),ITU_awaited[9],1)
+AssertionError: nan != -24.0 within 1 places
+ <br></div><div class="alert"><button type="button" class="close" data-dismiss="alert">×</button> <strong> test_itu_11 (test.test_conformance.ConformanceTest) </strong><hr>  Traceback (most recent call last):
+  File "/media/KINGSTON/github/loudnessPlotter/test/test_conformance.py", line 268, in test_itu_11
+    self.assertAlmostEqual(float(plotter.loudnessdata[testfile]['I'][0]),ITU_awaited[10],1)
+AssertionError: -18.23 != -24.0 within 1 places
+ <br></div><div class="alert"><button type="button" class="close" data-dismiss="alert">×</button> <strong> test_itu_12 (test.test_conformance.ConformanceTest) </strong><hr>  Traceback (most recent call last):
+  File "/media/KINGSTON/github/loudnessPlotter/test/test_conformance.py", line 273, in test_itu_12
+    self.assertAlmostEqual(float(plotter.loudnessdata[testfile]['I'][0]),ITU_awaited[11],1)
+AssertionError: -69.450000000000003 != -24.0 within 1 places
+ <br></div><div class="alert"><button type="button" class="close" data-dismiss="alert">×</button> <strong> test_itu_13 (test.test_conformance.ConformanceTest) </strong><hr>  Traceback (most recent call last):
+  File "/media/KINGSTON/github/loudnessPlotter/test/test_conformance.py", line 278, in test_itu_13
+    self.assertAlmostEqual(float(plotter.loudnessdata[testfile]['I'][0]),ITU_awaited[12],1)
+AssertionError: -7.9400000000000004 != -24.0 within 1 places
+ <br></div><div class="alert"><button type="button" class="close" data-dismiss="alert">×</button> <strong> test_itu_17 (test.test_conformance.ConformanceTest) </strong><hr>  Traceback (most recent call last):
+  File "/media/KINGSTON/github/loudnessPlotter/test/test_conformance.py", line 298, in test_itu_17
+    self.assertAlmostEqual(float(plotter.loudnessdata[testfile]['I'][0]),ITU_awaited[17],1)
+AssertionError: -21.510000000000002 != -23.0 within 1 places
+ <br></div><div class="alert"><button type="button" class="close" data-dismiss="alert">×</button> <strong> test_itu_21 (test.test_conformance.ConformanceTest) </strong><hr>  Traceback (most recent call last):
+  File "/media/KINGSTON/github/loudnessPlotter/test/test_conformance.py", line 318, in test_itu_21
+    self.assertAlmostEqual(float(plotter.loudnessdata[testfile]['I'][0]),ITU_awaited[20],1)
+AssertionError: nan != -23.0 within 1 places
+ <br></div><div class="alert"><button type="button" class="close" data-dismiss="alert">×</button> <strong> test_itu_22 (test.test_conformance.ConformanceTest) </strong><hr>  Traceback (most recent call last):
+  File "/media/KINGSTON/github/loudnessPlotter/test/test_conformance.py", line 323, in test_itu_22
+    self.assertAlmostEqual(float(plotter.loudnessdata[testfile]['I'][0]),ITU_awaited[21],1)
+AssertionError: -17.23 != -23.0 within 1 places
+ <br></div><div class="alert"><button type="button" class="close" data-dismiss="alert">×</button> <strong> test_itu_7 (test.test_conformance.ConformanceTest) </strong><hr>  Traceback (most recent call last):
+  File "/media/KINGSTON/github/loudnessPlotter/test/test_conformance.py", line 248, in test_itu_7
+    self.assertAlmostEqual(float(plotter.loudnessdata[testfile]['I'][0]),ITU_awaited[6],1)
+AssertionError: -22.510000000000002 != -24.0 within 1 places
+ <br></div><div class="alert"><button type="button" class="close" data-dismiss="alert">×</button> <strong> test_tech3341_6_bis (test.test_conformance.ConformanceTest) </strong><hr>  Traceback (most recent call last):
+  File "/media/KINGSTON/github/loudnessPlotter/test/test_conformance.py", line 156, in test_tech3341_6_bis
+    self.assertAlmostEqual(float(plotter.loudnessdata[testfile]['I'][0]),-23.0,1)
+AssertionError: -23.699999999999999 != -23.0 within 1 places
+ <br></div><div class="alert"><button type="button" class="close" data-dismiss="alert">×</button> <strong> test_tech3341_8 (test.test_conformance.ConformanceTest) </strong><hr>  Traceback (most recent call last):
+  File "/media/KINGSTON/github/loudnessPlotter/test/test_conformance.py", line 168, in test_tech3341_8
+    self.assertAlmostEqual(float(plotter.loudnessdata[testfile]['I'][0]),-23.0,1)
+AssertionError: -22.780000000000001 != -23.0 within 1 places
+ <br></div><div class="alert"><button type="button" class="close" data-dismiss="alert">×</button> <strong> test_tech3342_5 (test.test_conformance.ConformanceTest) </strong><hr>  Traceback (most recent call last):
+  File "/media/KINGSTON/github/loudnessPlotter/test/test_conformance.py", line 203, in test_tech3342_5
+    self.assertAlmostEqual(float(plotter.loudnessdata[testfile]['LRA']),5.0,1)
+AssertionError: 5.0500000000000007 != 5.0 within 1 places
+ <br></div>
+  </div>
+
+        
+        <hr>
+        
+        <footer>
+           <div class="container">
+                               <div class="row">
+                               
+                                 <div class="span4"><h6> Licensing </h6> 
+                                 Code licensed under <a href="license.html"> GPLv3 </a> license <br>
+                                 documentation under <a href="https://creativecommons.org/licenses/by/3.0/"> CC BY 3.0 </a> 
+                                 <br>
+                                 </div>
+                                 
+                                 <div class="span4"><h6> Project </h6>
+                                   <a href="https://github.com/mikrolax/loudnessPlotter/issues">Bugs</a> ::
+                                   <a href="https://github.com/mikrolax/loudnessPlotter/downloads">Download</a> 
+                                 </div>
+                                  
+                                <p class="pull-right">  &copy; <a href="http://mikrolax.me"> seb </a> - 2012 
+                                </p>
+                              </div>
+                             </div>
+        <footer> 
+        
+        </div> 
+        
+        <script src="js/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        
+        
+      </body>
+    </html>
+    

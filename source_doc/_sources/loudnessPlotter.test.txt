@@ -1,0 +1,43 @@
+test Package
+============
+
+:mod:`test_build` Module
+------------------------
+
+.. automodule:: loudnessPlotter.test.test_build
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_conformance` Module
+------------------------------
+
+.. automodule:: loudnessPlotter.test.test_conformance
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_doc` Module
+----------------------
+
+.. automodule:: loudnessPlotter.test.test_doc
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_download` Module
+---------------------------
+
+.. automodule:: loudnessPlotter.test.test_download
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_generate` Module
+---------------------------
+
+.. automodule:: loudnessPlotter.test.test_generate
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

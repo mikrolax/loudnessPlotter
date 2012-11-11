@@ -1,0 +1,196 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <title>loudnessPlotter</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Le styles -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <style>
+          body {
+            padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+          }
+        </style>
+        <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+        <link href="css/sidenav-docs.css" rel="stylesheet">
+
+        <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+          <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+        <!-- Le fav and touch icons -->
+        <!--  <link rel="shortcut icon" href="../assets/ico/favicon.ico">  -->
+        
+        
+        
+      </head>
+
+      <body>
+
+
+
+
+        <div class="navbar navbar-inverse  navbar-fixed-top "><div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="index.html">loudnessPlotter</a><div class="nav-collapse collapse"><ul class="nav"><li class="divider-vertical"></li><li><a href="doc.html">Documentation</a></li><li class="divider-vertical"></li><li><a href="test.html">Test</a></li> </ul>  <ul class="nav pull-right"><li class="divider-vertical"></li><li><a href="https://github.com/mikrolax/loudnessPlotter/issues">Bugs</a></li></ul></div></div></div></div>
+        
+        <div class="container">
+        <h2>Documentation / FAQ</h2>
+
+<hr>
+
+<blockquote>
+  <p>Source code documentation (mainly for developpers) is available <a href="source_doc/index.html">here</a>     </p>
+</blockquote>
+
+<h5>Source Code file structure</h5>
+
+<pre><code>--[ ebu_r128                      *ebu_r128 lib*
+--[ test                          *folder for test*     
+--[ doc                           *folder for  documentation*      
+-- loudness.py                    *main python script*      
+-- example_template.html          *a template example*      
+-- wave_analyze.exe               *static build of wave_analyze tool from ebu_r128 lib for windows platform*      
+-- wave_analyze                   *static build of wave_analyze tool from ebu_r128 lib for unix-type platform*
+</code></pre>
+
+<p>You will also find windows binarie.</p>
+
+<h5>How it works</h5>
+
+<p><code>loudness.py</code> launch <code>wave_analyze</code>, gets it output, compute Loudness Range Average meseaure and write a HTML page with graphics based on options.            </p>
+
+<h4>Build/Compilation</h4>
+
+<hr>
+
+<h5>Using unit tests it's easy!</h5>
+
+<pre><code>python test/test_build.py
+</code></pre>
+
+<h5>For unix-like platform (linux, MAC OS):</h5>
+
+<pre><code>cd ebu_r128
+make wave_analyze
+cp wave_analyze ../
+</code></pre>
+
+<h5>Windows</h5>
+
+<p><code>wave_analyze.exe</code> binarie is provided as well as loudnessPlotter.exe (see loudnessPlotter-(version)-win32.zip content) but you can built it yourself: <br />
+If you need you can compil it with minGW, take a look at Codeblocks IDE as it can be bundle with it.
+So assuming you have mingw installed:</p>
+
+<pre><code>cd ebu_r128
+mingw32-make wave_analyze
+copy wave_analyze ..\
+</code></pre>
+
+<p>Then, if you want, compil the python script using py2exe:</p>
+
+<pre><code>python setup.py py2exe
+</code></pre>
+
+<h4>Passing tests</h4>
+
+<hr>
+
+<blockquote>
+  <p>Some tests may fail as files are missing (EBU and ITU test files are not under version control).</p>
+</blockquote>
+
+<pre><code>cd test    
+python test.py
+</code></pre>
+
+<p>It will try to: <br />
+1. build <code>ebu_r128</code> lib <br />
+2. generate some basic tests <br />
+3. analyse/generate EBU and ITU filesets <br />
+4. pass conformance test <br />
+5. generate source code documentation                     </p>
+
+<h4>Playing with options</h4>
+
+<hr> 
+
+<p>For example:    </p>
+
+<pre><code>plotter=loudness([testfile.wav],os.getcwd())
+plotter.autoscale=False
+process()                             #analyse and write html
+plotter.template=/path/to/template    #change template
+plotter.outfilename                   #change output filename
+plotter.write()                       #only write html
+</code></pre>
+
+<p>Available options:</p>
+
+<p><code>autoscale</code> : <em>boolean</em> If set to False, y axis will be fixed between -70 and 0 LUFS. Default is True. <br />
+<code>outfilename</code> : <em>string</em> specifying output filename. Output filename is 'loudness.html' if not set. <br />
+<code>template</code> : <em>path</em> to a template. See example in source code.     </p>
+
+<h6>Changing HTML templates</h6>
+
+<p>As we use the python standard Template module, just make sure you have at least those 2 value:</p>
+
+<pre><code>$tabbedplaceholder    
+$plots
+</code></pre>
+
+<p>See <a href="http://docs.python.org/2/library/string.html#template-strings">python reference</a> for more information.</p>
+
+<p>For convenience, some example template are included in source distribution. Look at <code>example_template.html</code> file.</p>
+
+<h4>Contibuting</h4>
+
+<p><hr>
+Fork on github, develop, and send me patch. Or contact me via e-mail.     </p>
+
+<hr>   
+
+<h6>Normatives, references</h6>
+
+<p>[<a href="https://en.wikipedia.org/wiki/Loudness">1</a>] Wikipedia page for loudness <br />
+[<a href="https://en.wikipedia.org/wiki/Loudness_monitoring">2</a>] Wikipedia page for loudness monitoring <br />
+[<a href="http://tech.ebu.ch/loudness">3</a>] EBU R128 website <br />
+[<a href="http://www.itu.int/rec/R-REC-BS.1770/en">4</a>] ITU R-REC-BS.1770 on ITU website <br />
+[<a href="http://labs.radionova.no/2011/01/07/ebu-r128-library/">5</a>] radionovas original ebu_r128 lib links       </p>
+
+        
+        <hr>
+        
+        <footer>
+           <div class="container">
+                               <div class="row">
+                               
+                                 <div class="span4"><h6> Licensing </h6> 
+                                 Code licensed under <a href="license.html"> GPLv3 </a> license <br>
+                                 documentation under <a href="https://creativecommons.org/licenses/by/3.0/"> CC BY 3.0 </a> 
+                                 <br>
+                                 </div>
+                                 
+                                 <div class="span4"><h6> Project </h6>
+                                   <a href="https://github.com/mikrolax/loudnessPlotter/issues">Bugs</a> ::
+                                   <a href="https://github.com/mikrolax/loudnessPlotter/downloads">Download</a> 
+                                 </div>
+                                  
+                                <p class="pull-right">  &copy; <a href="http://mikrolax.me"> seb </a> - 2012 
+                                </p>
+                              </div>
+                             </div>
+        <footer> 
+        
+        </div> 
+        
+        <script src="js/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        
+        
+      </body>
+    </html>
+    

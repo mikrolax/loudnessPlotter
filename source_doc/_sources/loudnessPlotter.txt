@@ -1,0 +1,34 @@
+loudnessPlotter Package
+=======================
+
+:mod:`loudness` Module
+----------------------
+
+.. automodule:: loudnessPlotter.loudness
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`setup` Module
+-------------------
+
+.. automodule:: loudnessPlotter.setup
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test` Module
+------------------
+
+.. automodule:: loudnessPlotter.test
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    loudnessPlotter.test
+

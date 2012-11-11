@@ -1,0 +1,274 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>loudnessPlotter Package &mdash; loudnessPlotter 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="loudnessPlotter 0.1 documentation" href="index.html" />
+    <link rel="next" title="test Package" href="loudnessPlotter.test.html" />
+    <link rel="prev" title="Welcome to loudnessPlotter’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="loudnessPlotter.test.html" title="test Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to loudnessPlotter’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">loudnessPlotter 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="loudnessplotter-package">
+<h1>loudnessPlotter Package<a class="headerlink" href="#loudnessplotter-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-loudnessPlotter.loudness">
+<span id="loudness-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">loudness</span></tt> Module<a class="headerlink" href="#module-loudnessPlotter.loudness" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="loudnessPlotter.loudness.HTMLstats">
+<tt class="descclassname">loudnessPlotter.loudness.</tt><tt class="descname">HTMLstats</tt><big>(</big><em>stats</em><big>)</big><a class="reference internal" href="_modules/loudnessPlotter/loudness.html#HTMLstats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loudnessPlotter.loudness.HTMLstats" title="Permalink to this definition">¶</a></dt>
+<dd><p>return html from M,S,I stats dictionnary (returned by stats())</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="loudnessPlotter.loudness.LRA">
+<tt class="descclassname">loudnessPlotter.loudness.</tt><tt class="descname">LRA</tt><big>(</big><em>loudnessdata</em><big>)</big><a class="reference internal" href="_modules/loudnessPlotter/loudness.html#LRA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loudnessPlotter.loudness.LRA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="loudnessPlotter.loudness.LoudnessPlotter">
+<em class="property">class </em><tt class="descclassname">loudnessPlotter.loudness.</tt><tt class="descname">LoudnessPlotter</tt><big>(</big><em>filelist</em>, <em>outpath</em><big>)</big><a class="reference internal" href="_modules/loudnessPlotter/loudness.html#LoudnessPlotter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loudnessPlotter.loudness.LoudnessPlotter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>base class for launching executable, parse log and write output HTML file</p>
+<dl class="method">
+<dt id="loudnessPlotter.loudness.LoudnessPlotter.analyse">
+<tt class="descname">analyse</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/loudnessPlotter/loudness.html#LoudnessPlotter.analyse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loudnessPlotter.loudness.LoudnessPlotter.analyse" title="Permalink to this definition">¶</a></dt>
+<dd><p>launch wave_analyze executable on each file of self.filelist putting stdout in a file 
+fills self.processsed file path list</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="loudnessPlotter.loudness.LoudnessPlotter.getHtmlContent">
+<tt class="descname">getHtmlContent</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/loudnessPlotter/loudness.html#LoudnessPlotter.getHtmlContent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loudnessPlotter.loudness.LoudnessPlotter.getHtmlContent" title="Permalink to this definition">¶</a></dt>
+<dd><p>get content for multi-files, return tabed content and the plots (to put in js)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="loudnessPlotter.loudness.LoudnessPlotter.process">
+<tt class="descname">process</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/loudnessPlotter/loudness.html#LoudnessPlotter.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loudnessPlotter.loudness.LoudnessPlotter.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>base function to parse and write HTML based on internal config</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="loudnessPlotter.loudness.LoudnessPlotter.write">
+<tt class="descname">write</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/loudnessPlotter/loudness.html#LoudnessPlotter.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loudnessPlotter.loudness.LoudnessPlotter.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>write single HTML file for a list of file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="loudnessPlotter.loudness.LoudnessPlotter.writeIndividual">
+<tt class="descname">writeIndividual</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/loudnessPlotter/loudness.html#LoudnessPlotter.writeIndividual"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loudnessPlotter.loudness.LoudnessPlotter.writeIndividual" title="Permalink to this definition">¶</a></dt>
+<dd><p>write single HTML file for an individual file</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="loudnessPlotter.loudness.cli">
+<tt class="descclassname">loudnessPlotter.loudness.</tt><tt class="descname">cli</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/loudnessPlotter/loudness.html#cli"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loudnessPlotter.loudness.cli" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple command line interface. Process file or path, based on input args</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="loudnessPlotter.loudness.module_path">
+<tt class="descclassname">loudnessPlotter.loudness.</tt><tt class="descname">module_path</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/loudnessPlotter/loudness.html#module_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loudnessPlotter.loudness.module_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>This will get us the program&#8217;s directory,
+even if we are frozen using py2exe</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="loudnessPlotter.loudness.parseLoudnessLog">
+<tt class="descclassname">loudnessPlotter.loudness.</tt><tt class="descname">parseLoudnessLog</tt><big>(</big><em>filepath</em><big>)</big><a class="reference internal" href="_modules/loudnessPlotter/loudness.html#parseLoudnessLog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loudnessPlotter.loudness.parseLoudnessLog" title="Permalink to this definition">¶</a></dt>
+<dd><p>return dict : { &#8216;M&#8217; : [val,val2],
+&#8216;S&#8217; : [value,value],</p>
+<blockquote>
+<div>&#8216;I&#8217; : [integratedvalue]}</div></blockquote>
+<p>value are string reprensenting LUFS value</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="loudnessPlotter.loudness.stats">
+<tt class="descclassname">loudnessPlotter.loudness.</tt><tt class="descname">stats</tt><big>(</big><em>loudnessdata</em><big>)</big><a class="reference internal" href="_modules/loudnessPlotter/loudness.html#stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loudnessPlotter.loudness.stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>get min/max/average value of M,S,(I) value. Return a dictionnary</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="loudnessPlotter.loudness.we_are_frozen">
+<tt class="descclassname">loudnessPlotter.loudness.</tt><tt class="descname">we_are_frozen</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/loudnessPlotter/loudness.html#we_are_frozen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loudnessPlotter.loudness.we_are_frozen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether we are frozen via py2exe.
+This will affect how we find out where we are located.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="loudnessPlotter.loudness.writeHTML">
+<tt class="descclassname">loudnessPlotter.loudness.</tt><tt class="descname">writeHTML</tt><big>(</big><em>loudnessdata</em>, <em>htmlout</em><big>)</big><a class="reference internal" href="_modules/loudnessPlotter/loudness.html#writeHTML"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loudnessPlotter.loudness.writeHTML" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a single self-contained HTML page with graph.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-loudnessPlotter.setup">
+<span id="setup-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">setup</span></tt> Module<a class="headerlink" href="#module-loudnessPlotter.setup" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="loudnessPlotter.setup.find_data_files">
+<tt class="descclassname">loudnessPlotter.setup.</tt><tt class="descname">find_data_files</tt><big>(</big><em>source</em>, <em>target</em>, <em>patterns</em><big>)</big><a class="reference internal" href="_modules/loudnessPlotter/setup.html#find_data_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loudnessPlotter.setup.find_data_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Locates the specified data-files and returns the matches
+in a data_files compatible format.</p>
+<dl class="docutils">
+<dt>source is the root of the source data tree.</dt>
+<dd>Use &#8216;&#8217; or &#8216;.&#8217; for current directory.</dd>
+<dt>target is the root of the target data tree.</dt>
+<dd>Use &#8216;&#8217; or &#8216;.&#8217; for the distribution directory.</dd>
+<dt>patterns is a sequence of glob-patterns for the</dt>
+<dd>files you want to copy.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="loudnessPlotter.setup.win_buid">
+<tt class="descclassname">loudnessPlotter.setup.</tt><tt class="descname">win_buid</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/loudnessPlotter/setup.html#win_buid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loudnessPlotter.setup.win_buid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="loudnessPlotter.setup.zip_folder">
+<tt class="descclassname">loudnessPlotter.setup.</tt><tt class="descname">zip_folder</tt><big>(</big><em>folder_path</em>, <em>output_path</em><big>)</big><a class="reference internal" href="_modules/loudnessPlotter/setup.html#zip_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loudnessPlotter.setup.zip_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Zip the contents of an entire folder (with that folder included
+in the archive). Empty subfolders will be included in the archive
+as well.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-loudnessPlotter.test">
+<span id="test-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test</span></tt> Module<a class="headerlink" href="#module-loudnessPlotter.test" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="loudnessPlotter.test.html">test Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="loudnessPlotter.test.html#module-loudnessPlotter.test.test_build"><tt class="docutils literal"><span class="pre">test_build</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loudnessPlotter.test.html#test-conformance-module"><tt class="docutils literal"><span class="pre">test_conformance</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loudnessPlotter.test.html#module-loudnessPlotter.test.test_doc"><tt class="docutils literal"><span class="pre">test_doc</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loudnessPlotter.test.html#module-loudnessPlotter.test.test_download"><tt class="docutils literal"><span class="pre">test_download</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loudnessPlotter.test.html#test-generate-module"><tt class="docutils literal"><span class="pre">test_generate</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">loudnessPlotter Package</a><ul>
+<li><a class="reference internal" href="#module-loudnessPlotter.loudness"><tt class="docutils literal"><span class="pre">loudness</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-loudnessPlotter.setup"><tt class="docutils literal"><span class="pre">setup</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-loudnessPlotter.test"><tt class="docutils literal"><span class="pre">test</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to loudnessPlotter&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="loudnessPlotter.test.html"
+                        title="next chapter">test Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/loudnessPlotter.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="loudnessPlotter.test.html" title="test Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to loudnessPlotter’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">loudnessPlotter 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, seb@mikrolax.me.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

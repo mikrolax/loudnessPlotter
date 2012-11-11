@@ -1,0 +1,145 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>loudnessPlotter.test.test_doc &mdash; loudnessPlotter 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="loudnessPlotter 0.1 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">loudnessPlotter 0.1 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for loudnessPlotter.test.test_doc</h1><div class="highlight"><pre>
+<span class="c">#/usr/bin/python</span>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">unittest</span>
+
+<div class="viewcode-block" id="SourceDocTest"><a class="viewcode-back" href="../../../loudnessPlotter.test.html#loudnessPlotter.test.test_doc.SourceDocTest">[docs]</a><span class="k">class</span> <span class="nc">SourceDocTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="SourceDocTest.setUp"><a class="viewcode-back" href="../../../loudnessPlotter.test.html#loudnessPlotter.test.test_doc.SourceDocTest.setUp">[docs]</a>  <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="o">.</span><span class="n">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="o">.</span><span class="n">verbose</span><span class="o">=</span><span class="mi">2</span>
+    <span class="n">testpath</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">__file__</span><span class="p">))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">=</span><span class="s">&#39; -F -H loudnessPlotter -A seb@mikrolax.me -V 0.1 &#39;</span> <span class="c">#-R -f </span>
+    <span class="n">basedir</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">)))</span>
+    <span class="k">print</span> <span class="n">basedir</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">basedir</span><span class="p">)</span> <span class="p">)</span>
+    <span class="k">print</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span> 
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">packagedir</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span><span class="s">&#39;loudnessPlotter&#39;</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&#39;packagedir: </span><span class="si">%s</span><span class="s"> &#39;</span> <span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">packagedir</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">outputdir</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">packagedir</span><span class="p">,</span><span class="s">&#39;doc&#39;</span><span class="p">,</span><span class="s">&#39;sphinx&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">pathnames</span><span class="o">=</span><span class="p">[]</span> <span class="c">#to be excluded</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sourcedir</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputdir</span>    
+
+    </div>
+<div class="viewcode-block" id="SourceDocTest.test_step1_generate_sphinx"><a class="viewcode-back" href="../../../loudnessPlotter.test.html#loudnessPlotter.test.test_doc.SourceDocTest.test_step1_generate_sphinx">[docs]</a>  <span class="k">def</span> <span class="nf">test_step1_generate_sphinx</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">cmd</span><span class="o">=</span><span class="s">&#39;sphinx-apidoc </span><span class="si">%s</span><span class="s"> -o </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputdir</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">packagedir</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">pathnames</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="k">print</span> <span class="n">cmd</span>
+    <span class="n">returnCode</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span><span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">returnCode</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>     
+  
+  <span class="c">#def test_step2_build_sphinx(self):</span>
+    <span class="c">#sys.path.insert(0, os.path.abspath(&#39;.&#39;))</span>
+    <span class="n">options</span><span class="o">=</span><span class="s">&#39;-a &#39;</span><span class="c"># -q  -E -W</span>
+    <span class="n">builddir</span><span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">packagedir</span><span class="p">,</span><span class="s">&#39;doc&#39;</span><span class="p">,</span><span class="s">&#39;source_doc&#39;</span><span class="p">)</span>
+    <span class="c">#filenames=[]</span>
+    <span class="n">cmd</span><span class="o">=</span><span class="s">&#39;sphinx-build </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s"> &#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">options</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">sourcedir</span><span class="p">,</span><span class="n">builddir</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&#39;----------------------------------------------------------&#39;</span>
+    <span class="k">print</span> <span class="n">cmd</span>
+    <span class="k">print</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="n">returnCode</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span><span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">returnCode</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    </div>
+<div class="viewcode-block" id="SourceDocTest.tearDown"><a class="viewcode-back" href="../../../loudnessPlotter.test.html#loudnessPlotter.test.test_doc.SourceDocTest.tearDown">[docs]</a>  <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+     <span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="o">.</span><span class="n">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>     
+</div></div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+  <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>        
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">loudnessPlotter 0.1 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, seb@mikrolax.me.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

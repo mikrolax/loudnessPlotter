@@ -1,0 +1,657 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>loudnessPlotter.loudness &mdash; loudnessPlotter 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="loudnessPlotter 0.1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">loudnessPlotter 0.1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for loudnessPlotter.loudness</h1><pre>
+#/usr/bin/python
+# -*- coding: utf-8 -*-
+
+from string import Template
+import os
+import subprocess
+import glob
+import sys
+
+__version__='0.2.0'
+__author__='seb@mikrolax.me'
+
+
+tpl_CDN='''&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;&lt;head&gt;
+&lt;meta http-equiv="content-type" content="text/html; charset=UTF-8"&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;loudnessPlotter&lt;/title&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;meta name="description" content="plot loudness mesurement"&gt;
+    &lt;meta name="author" content="seb 'mikrolax'"&gt;
+    &lt;link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/css/bootstrap-combined.min.css" rel="stylesheet"&gt;
+
+    &lt;style&gt;
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    &lt;/style&gt;
+    &lt;!-- Le HTML5 shim, for IE6-8 support of HTML5 elements --&gt;
+    &lt;!--[if lt IE 9]&gt;
+      &lt;script src="http://html5shim.googlecode.com/svn/trunk/html5.js"&gt;&lt;/script&gt;
+    &lt;![endif]--&gt;
+  &lt;!--[if lte IE 8]&gt;&lt;script language="javascript" type="text/javascript" src="excanvas.min.js"&gt;&lt;/script&gt;&lt;![endif]--&gt;
+    &lt;link rel="shortcut icon" href="favicon.ico"&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+
+    &lt;div class="navbar navbar-inverse navbar-fixed-top"&gt;
+      &lt;div class="navbar-inner"&gt;
+        &lt;div class="container"&gt;
+          &lt;a class="brand" href="#"&gt;loudnessPlotter&lt;/a&gt;
+          &lt;div class="nav-collapse collapse"&gt;
+            &lt;ul class="nav"&gt;
+              &lt;!-- &lt;li class="active"&gt;&lt;a href="https://github.com/mikrolax/loudnessPlotter/issues"&gt;Bugs&lt;/a&gt;&lt;/li&gt; --&gt;
+            &lt;/ul&gt;
+          &lt;/div&gt;&lt;!--/.nav-collapse --&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    
+  &lt;div class="container"&gt;
+    &lt;h3&gt; $filename &lt;/h3&gt;&lt;hr&gt;
+      $htmlstats
+      &lt;div id="placeholder" style="width:900px;height:450px"&gt;&lt;/div&gt;
+      
+            
+    &lt;footer&gt;
+      &lt;hr&gt;
+      &lt;p class="pull-right"&gt; &lt;a href="https://github.com/mikrolax/loudnessPlotter"&gt;loudnessPlotter&lt;/a&gt; - 2012 &lt;/p&gt;
+    &lt;/footer&gt;
+  &lt;/div&gt;
+  
+  &lt;script src="http://code.jquery.com/jquery-1.8.2.min.js"&gt;&lt;/script&gt;
+  &lt;script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"&gt;&lt;/script&gt;
+  &lt;script src="http://cdnjs.cloudflare.com/ajax/libs/flot/0.7/jquery.flot.min.js"&gt;&lt;/script&gt;  
+  &lt;script language="javascript" type="text/javascript"&gt;
+  $(document).ready(function() {
+  $.plot($("#placeholder"), $datas,$options);
+  });
+  &lt;/script&gt;
+
+  &lt;/body&gt;&lt;/html&gt;
+'''
+
+
+tpl_multi_fromCDN='''&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;&lt;head&gt;
+&lt;meta http-equiv="content-type" content="text/html; charset=UTF-8"&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;loudnessPlotter&lt;/title&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;meta name="description" content="plot loudness mesurement"&gt;
+    &lt;meta name="author" content="seb 'mikrolax'"&gt;
+    &lt;!-- Le styles --&gt;
+    &lt;style&gt;
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    &lt;/style&gt;
+    &lt;link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/css/bootstrap-combined.min.css" rel="stylesheet"&gt;
+    &lt;!-- Le HTML5 shim, for IE6-8 support of HTML5 elements --&gt;
+    &lt;!--[if lt IE 9]&gt;
+      &lt;script src="http://html5shim.googlecode.com/svn/trunk/html5.js"&gt;&lt;/script&gt;
+    &lt;![endif]--&gt;
+  &lt;!--[if lte IE 8]&gt;&lt;script language="javascript" type="text/javascript" src="excanvas.min.js"&gt;&lt;/script&gt;&lt;![endif]--&gt;
+    &lt;link rel="shortcut icon" href="favicon.ico"&gt;
+    
+  &lt;/head&gt;
+  &lt;body&gt;
+
+    &lt;div class="navbar navbar-inverse navbar-fixed-top"&gt;
+      &lt;div class="navbar-inner"&gt;
+        &lt;div class="container"&gt;
+          &lt;a class="brand" href="#"&gt;loudnessPlotter&lt;/a&gt;
+          &lt;div class="nav-collapse collapse"&gt;
+            &lt;ul class="nav"&gt;
+              &lt;!-- &lt;li class="active"&gt;&lt;a href="#"&gt;Home&lt;/a&gt;&lt;/li&gt; --&gt;
+            &lt;/ul&gt;
+          &lt;/div&gt;&lt;!--/.nav-collapse --&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    
+  &lt;div class="container"&gt;
+  $tabbedplaceholder
+  &lt;footer&gt;
+  &lt;hr&gt;
+  &lt;p class="pull-right"&gt; &lt;a href="https://github.com/mikrolax/loudnessPlotter"&gt;loudnessPlotter&lt;/a&gt; - 2012 &lt;/p&gt;
+  &lt;/footer&gt;
+  &lt;/div&gt;
+  
+  &lt;script src="http://code.jquery.com/jquery-1.8.2.min.js"&gt;&lt;/script&gt;
+  &lt;script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"&gt;&lt;/script&gt;
+  &lt;script src="http://cdnjs.cloudflare.com/ajax/libs/flot/0.7/jquery.flot.min.js"&gt;&lt;/script&gt;
+&lt;script language="javascript" type="text/javascript"&gt;
+$(document).ready(function() {
+$plots
+});
+&lt;/script&gt;
+&lt;/body&gt;&lt;/html&gt;
+'''
+    
+
+#for py2exe freezing support 
+<div class="viewcode-block" id="we_are_frozen"><a class="viewcode-back" href="../../loudnessPlotter.html#loudnessPlotter.loudness.we_are_frozen">[docs]</a>def we_are_frozen():
+  """Returns whether we are frozen via py2exe.
+  This will affect how we find out where we are located."""
+  return hasattr(sys, "frozen")</div>
+<div class="viewcode-block" id="module_path"><a class="viewcode-back" href="../../loudnessPlotter.html#loudnessPlotter.loudness.module_path">[docs]</a>def module_path():
+  """ This will get us the program's directory,
+  even if we are frozen using py2exe"""
+  if we_are_frozen():
+    return os.path.dirname(unicode(sys.executable, sys.getfilesystemencoding( )))
+  else:
+    return os.path.dirname(os.path.abspath(__file__))
+        
+</div>
+<div class="viewcode-block" id="writeHTML"><a class="viewcode-back" href="../../loudnessPlotter.html#loudnessPlotter.loudness.writeHTML">[docs]</a>def writeHTML(loudnessdata,htmlout): #pass snippet?
+  """    Write a single self-contained HTML page with graph. """
+  #print 'writeHTML %s' %os.getcwd()
+  fout=open(htmlout+'.html','w')
+  htmlstats=HTMLstats(stats(loudnessdata))
+
+  datas=[] # getData(self.loudnessdata)
+  M=[]
+  S=[]
+  I=[]
+  idx_m=0
+  idx_s=0
+  idx_i=0  
+  for val in loudnessdata['M']:
+    M.append([idx_m*2*0.1,loudnessdata['M'][idx_m]])
+    idx_m+=1
+  for val in loudnessdata['S']:
+    S.append([idx_s*0.1,loudnessdata['S'][idx_s]])
+    idx_s+=1
+  for val in loudnessdata['M']:
+    I.append([idx_i*2*0.1,loudnessdata['I'][0]]) 
+    idx_i+=1  
+  Mdict={}
+  Mdict['label']='Momentary'
+  Mdict['data']=M
+  Sdict={}
+  Sdict['label']='Short-Term'
+  Sdict['data']=S  
+  Idict={}
+  Idict['label']='Integrated'
+  Idict['data']=I  
+  datas.append(Mdict)
+  datas.append(Sdict)
+  datas.append(Idict)
+  options='''{  series: {lines: {show: true, steps: true },points: { show: false },bars: { show: false }},
+  yaxis: { tickFormatter: function (v) { return v + " LUFS"; } },
+  xaxis: { tickFormatter: function (v) { return v + " s"; } },
+  legend: { position: 'se' }  }'''
+  #if snippet ==True:
+  #  s = Template(snippet)
+  #  page=s.safe_substitute(filename=os.path.basename(htmlout),htmlstats=htmlstats,datas=datas,options=options) #,options=options  
+  #else:
+  s = Template(tpl_CDN)
+  page=s.safe_substitute(filename=os.path.basename(htmlout),htmlstats=htmlstats,datas=datas,options=options) #,options=options
+  print 'write %s' %htmlout+'.html'
+  fout.write(str(page))
+  return page#not really needed...
+
+
+</div>
+<div class="viewcode-block" id="stats"><a class="viewcode-back" href="../../loudnessPlotter.html#loudnessPlotter.loudness.stats">[docs]</a>def stats(loudnessdata):
+  """ get min/max/average value of M,S,(I) value. Return a dictionnary  """
+  stats={}
+  stats['M']={}
+  stats['S']={}
+  idx=0
+  maxVal=-100
+  minVal=0
+  avgVal=0
+  for item in loudnessdata['M']:
+    try:
+      data=float(loudnessdata['M'][idx])
+    except:
+      #print loudnessdata['M'][idx] #weird =&gt; : 1.#F
+      data=-100.0
+      pass
+    if data &gt; maxVal:
+      maxVal=data
+    elif data &lt; minVal:
+      minVal=data
+    avgVal+=data/len(loudnessdata['M'])     
+    idx+=1  
+  stats['M']['min']=minVal
+  stats['M']['max']=maxVal
+  stats['M']['avg']='{0:.2f}'.format(avgVal)    
+  idx=0
+  maxVal=-100
+  minVal=0
+  avgVal=0
+  for item in loudnessdata['S']:
+    try:
+      data=float(loudnessdata['S'][idx])
+    except:
+      #print loudnessdata['S'][idx]
+      data=-100
+      pass    
+    if data &gt; maxVal:
+      maxVal=data
+    elif data &lt; minVal:
+      minVal=data
+    avgVal+=data/len(loudnessdata['S'])     
+    idx+=1  
+  stats['S']['min']=minVal
+  stats['S']['max']=maxVal
+  stats['S']['avg']='{0:.2f}'.format(avgVal)   
+  try:
+    data=float(loudnessdata['I'][0])
+  except:
+    data=-100.0
+  stats['I']=data
+  
+  #import pprint
+  #pprint.pprint(stats)
+  stats['LRA']=LRA(loudnessdata)
+  return stats
+</div>
+<div class="viewcode-block" id="parseLoudnessLog"><a class="viewcode-back" href="../../loudnessPlotter.html#loudnessPlotter.loudness.parseLoudnessLog">[docs]</a>def parseLoudnessLog(filepath):
+  """ return dict : { 'M' : [val,val2],
+                      'S' : [value,value],
+                      'I' : [integratedvalue]}
+      value are string reprensenting LUFS value                
+  """
+  loudnessdata={}
+  loudnessdata['M']=[]
+  loudnessdata['S']=[]
+  loudnessdata['I']=[]
+  key=''
+  lines = open(filepath,'r').readlines()
+  for line in lines:
+    if 'ebu_mode=s' in line:  
+      key='S'
+    if 'ebu_mode=m' in line:  
+      key='M'
+    if 'ebu_mode=i' in line:  
+      key='I'      
+    if 'Lk=' in line:
+      data=line.rsplit()[1]
+      loudnessdata[key].append(data.rsplit('Lk=')[1])  
+  return loudnessdata   
+  </div>
+<div class="viewcode-block" id="HTMLstats"><a class="viewcode-back" href="../../loudnessPlotter.html#loudnessPlotter.loudness.HTMLstats">[docs]</a>def HTMLstats(stats):
+  """ return html from M,S,I stats dictionnary (returned by stats())  """
+  html='''&lt;dl class="dl-horizontal"&gt;'''
+  s=m=i=''   
+  for key in stats.keys():
+    if key=='M':
+      m='''&lt;dt&gt;Momentary max&lt;/dt&gt; &lt;dd&gt;'''+str(stats['M']['max'])+''' LUFS&lt;/dd&gt;'''
+      m+='''&lt;dt&gt;Momentary min&lt;/dt&gt; &lt;dd&gt;'''+str(stats['M']['min'])+''' LUFS&lt;/dd&gt;'''
+      m+='''&lt;dt&gt;Momentary average&lt;/dt&gt; &lt;dd&gt;'''+str(stats['M']['avg'])+''' LUFS&lt;/dd&gt;'''
+    elif key=='S':
+      s='''&lt;dt&gt;Short-term max&lt;/dt&gt; &lt;dd&gt;'''+str(stats['S']['max'])+''' LUFS&lt;/dd&gt;'''
+      s+='''&lt;dt&gt;Short-term min&lt;/dt&gt; &lt;dd&gt;'''+str(stats['S']['min'])+''' LUFS&lt;/dd&gt;'''
+      s+='''&lt;dt&gt;Short-term average&lt;/dt&gt; &lt;dd&gt;'''+str(stats['S']['avg'])+''' LUFS&lt;/dd&gt;'''
+    elif key=='I':
+      i='''&lt;dt&gt;Integrated&lt;/dt&gt; &lt;dd&gt;'''+str(stats['I'])+''' LUFS&lt;/dd&gt;'''
+    elif key=='LRA':
+      lra='''&lt;dt&gt;Loudness Range&lt;/dt&gt; &lt;dd&gt;'''+str(stats['LRA'])+''' LU&lt;/dd&gt;'''    
+    else:
+      pass
+  html+=m+s+i+lra    
+  html+='''&lt;/dl&gt;'''
+  return html  
+</div>
+<div class="viewcode-block" id="LRA"><a class="viewcode-back" href="../../loudnessPlotter.html#loudnessPlotter.loudness.LRA">[docs]</a>def LRA(loudnessdata):
+  import math
+  absThreshold=-70.0
+  relThreshold=-20.0  
+  absGated=[]
+  idx=0
+  for item in loudnessdata['S']:
+    try:
+      data=float(loudnessdata['S'][idx])
+    except:
+      data=-100.0           #will not be taken into account or exit? 
+    if data &gt; absThreshold:
+      absGated.append(data)  
+    idx+=1    
+  n=len(absGated)
+  if n==0:
+    return 'nan'    
+  power=0
+  for item in absGated:
+    power+=pow(10,item/10)
+  power=power/n
+  integrated=10*math.log10(power)  
+  relGated=[]
+  for data in absGated:
+    if data &gt; integrated+ relThreshold:
+      relGated.append(data)  
+  n=len(relGated)    
+  relGated.sort()
+  idx=(n-1)*0.1+1  
+  perclow=relGated[int(idx)]
+  idx=(n-1)*0.95+1
+  perchigh=relGated[int(idx)]
+  lra=perchigh-perclow
+  return lra
+  
+  </div>
+<div class="viewcode-block" id="LoudnessPlotter"><a class="viewcode-back" href="../../loudnessPlotter.html#loudnessPlotter.loudness.LoudnessPlotter">[docs]</a>class LoudnessPlotter(object):
+  """ base class for launching executable, parse log and write output HTML file """
+  def __init__(self,filelist,outpath):
+    """ init some self used value """
+    self.filelist=filelist
+    self.outpath=outpath
+    self.loudnessdata={}
+    self.toolspath=module_path()
+    if sys.platform == 'win32':
+      self.wavtoolpath=os.path.join(self.toolspath,'wave_analyze.exe')
+    else:
+      self.wavtoolpath=os.path.join(self.toolspath,'wave_analyze')
+    self.processed=[]
+    self.failed=[]
+    # options
+    self.snippet=False
+    self.autoscale=True
+    self.outfilename=None
+    self.template=None
+    
+<div class="viewcode-block" id="LoudnessPlotter.analyse"><a class="viewcode-back" href="../../loudnessPlotter.html#loudnessPlotter.loudness.LoudnessPlotter.analyse">[docs]</a>  def analyse(self):
+    """ launch wave_analyze executable on each file of self.filelist putting stdout in a file 
+     fills self.processsed file path list
+    """
+    done=0
+    for item in self.filelist:
+      logfile=item+'_loudness.txt'
+      if len(self.filelist) &gt; 1:
+        print 'loudness analyse :: %s :: %s' %(str(done*100/len(self.filelist)),os.path.basename(item))
+      #else:
+      #  print 'loudness analyse :: %s' %os.path.basename(item)
+      if os.path.isfile(logfile):
+        #print 'remove %s' %logfile
+        os.remove(logfile)
+      error_mode=0  
+      for ebu_mode in ['m','s','i']:
+        #print 'ebu mode %s' %ebu_mode
+        log=open(logfile,'a')
+        log.write('ebu_mode=%s\n' %ebu_mode)
+        log.flush()
+        cmd=self.wavtoolpath+' "'+item+'" '+ebu_mode   
+        #print cmd
+        res=subprocess.call(cmd,stdout=log,shell=True) 
+        if res!=0: 
+          #print 'error analysing %s' %item
+          error_mode+=1 
+        log.close()
+      if error_mode&gt;0:  
+        self.failed.append(item)     
+        #print 'error analysing %s' %item
+      else:       
+        self.processed.append(item)  
+      done+=1
+    for f in self.processed:
+      self.loudnessdata[os.path.basename(f)]=parseLoudnessLog(f+'_loudness.txt')
+      self.loudnessdata[os.path.basename(f)]['LRA']=LRA(self.loudnessdata[os.path.basename(f)])
+    return self.loudnessdata
+        </div>
+<div class="viewcode-block" id="LoudnessPlotter.process"><a class="viewcode-back" href="../../loudnessPlotter.html#loudnessPlotter.loudness.LoudnessPlotter.process">[docs]</a>  def process(self):
+    """ base function to parse and write HTML based on internal config """
+    if len(self.filelist)==0:
+      print 'No file to process. Abort'
+      return 1
+    self.analyse() #fills self.processed else flot bugs (no data on one placeholder for width/height seems to affect them all)
+    if len(self.processed)==1:
+      self.writeIndividual()
+    else :  
+      return self.write() 
+        </div>
+<div class="viewcode-block" id="LoudnessPlotter.writeIndividual"><a class="viewcode-back" href="../../loudnessPlotter.html#loudnessPlotter.loudness.LoudnessPlotter.writeIndividual">[docs]</a>  def writeIndividual(self):
+    """ write single HTML file for an individual file"""
+    for key in self.loudnessdata.keys():
+      writeHTML(self.loudnessdata[key],os.path.join(self.outpath,key))
+
+</div>
+<div class="viewcode-block" id="LoudnessPlotter.getHtmlContent"><a class="viewcode-back" href="../../loudnessPlotter.html#loudnessPlotter.loudness.LoudnessPlotter.getHtmlContent">[docs]</a>  def getHtmlContent(self):
+    """ get content for multi-files, return tabed content and the plots (to put in js)"""
+    tabbedplaceholder=''
+    if len(self.failed)&gt;0:    #if some test failed display notif    
+      tabbedplaceholder+='''&lt;div class="alert"&gt;
+      &lt;button type="button" class="close" data-dismiss="alert"&gt;×&lt;/button&gt;
+      &lt;strong&gt;Warning! &lt;/strong&gt;''' 
+      for item in self.failed:
+        tabbedplaceholder+='''&lt;br&gt;error while processing :'''+os.path.basename(item)
+      tabbedplaceholder+='''&lt;/div&gt;'''    
+    tabbedplaceholder+='''&lt;div class="tabbable"&gt; 
+                        &lt;!-- &lt;ul class="nav nav-tabs"&gt; --&gt;
+                        &lt;ul class="nav nav-pills"&gt;
+                        '''    
+    i=0                    
+    for f in self.loudnessdata.keys(): 
+      name=os.path.splitext(os.path.basename(f))[0]
+      if i==0:
+        tabbedplaceholder+='''&lt;li class="active"&gt;&lt;a href="#'''+name.replace(' ','')+'''" data-toggle="tab"&gt;'''+name+'''&lt;/a&gt;&lt;/li&gt;
+        '''      
+      else:
+        tabbedplaceholder+='''&lt;li&gt;&lt;a href="#'''+name.replace(' ','')+'''" data-toggle="tab"&gt;'''+name+'''&lt;/a&gt;&lt;/li&gt;
+        '''
+      i+=1      
+    tabbedplaceholder+='''&lt;/ul&gt;&lt;hr&gt;
+    '''
+    tabbedplaceholder+='''&lt;div class="tab-content"&gt;
+    '''  
+    j=0
+    for tab in self.loudnessdata.keys():
+      name=os.path.splitext(os.path.basename(tab))[0]   
+      if j==0:
+        tabbedplaceholder+='''&lt;div class="tab-pane active" id="'''+name.replace(' ','')+'''"&gt; 
+        ''' 
+      else:
+        tabbedplaceholder+='''&lt;div class="tab-pane" id="'''+name.replace(' ','')+'''"&gt;
+        ''' 
+      #print tab
+      #only for min/max/average, do not compute LRA again        
+      tabbedplaceholder+=HTMLstats(stats(self.loudnessdata[tab]))+''' 
+      &lt;div id="'''+'placeholder'+name.replace(' ','')+'''" style="width:1000px;height:450px"&gt;&lt;/div&gt;&lt;/div&gt;'''  
+      j+=1
+    tabbedplaceholder+='''&lt;/div&gt;
+    
+    &lt;/div&gt; 
+    '''    
+    
+    plots=''
+    for item in self.loudnessdata.keys():
+      datas=[] #getData(self.loudnessdata[item])
+      M=[]
+      S=[]
+      I=[]
+      idx_m=0
+      idx_s=0
+      idx_i=0
+      for val in self.loudnessdata[item]['M']:
+        M.append([idx_m*2*0.1,self.loudnessdata[item]['M'][idx_m]])
+        idx_m+=1
+      for val in self.loudnessdata[item]['S']:
+        S.append([idx_s*0.1,self.loudnessdata[item]['S'][idx_s]])
+        idx_s+=1  
+      for val in self.loudnessdata[item]['M']:
+        I.append([idx_i*2*0.1,self.loudnessdata[item]['I'][0]],) 
+        idx_i+=1
+      Mdict={}
+      Mdict['label']='Momentary'
+      Mdict['data']=M
+      Sdict={}
+      Sdict['label']='Short-Term'
+      Sdict['data']=S  
+      Idict={}
+      Idict['label']='Integrated'
+      Idict['data']=I  
+      
+      #Idict['points']={'show':'false'} 
+      #Idict['lines']={'show':'true'} 
+      #Idict['bars']={'show':'false','horizontal':'false'}
+      
+      datas.append(Mdict)
+      datas.append(Sdict)
+      datas.append(Idict)
+      if self.autoscale==True:
+        options='''{
+              series: {lines: {show: true, steps: true },points: { show: false },bars: { show: false }},
+              yaxis: { tickFormatter: function (v) { return v + " LUFS"; } },
+              xaxis: { tickFormatter: function (v) { return v + " s"; } },
+              legend: { position: 'se' }}'''
+      else:
+        options='''{
+              series: {lines: {show: true, steps: true },points: { show: false },bars: { show: false }},
+              yaxis: { min:-70, max: 0, tickFormatter: function (v) { return v + " LUFS"; } },
+              xaxis: { tickFormatter: function (v) { return v + " s"; } },
+              legend: { position: 'se' }}'''
+
+      name=os.path.splitext(os.path.basename(item))[0]
+      plots+='''$.plot($("#placeholder'''+name.replace(' ','')+'''"), '''+str(datas)+''','''+options+''');             
+             '''    
+    return (tabbedplaceholder,plots)
+  </div>
+<div class="viewcode-block" id="LoudnessPlotter.write"><a class="viewcode-back" href="../../loudnessPlotter.html#loudnessPlotter.loudness.LoudnessPlotter.write">[docs]</a>  def write(self):
+    """ write single HTML file for a list of file"""  
+    tabbedplaceholder,plots =self.getHtmlContent()
+    
+    if self.template != None and os.path.exists(self.template):
+      print 'using template file :  %s' %self.template
+      s = Template( open(self.template,'r').read() ) 
+    else:  
+      s = Template(tpl_multi_fromCDN)
+    #options=  
+    page=s.safe_substitute(tabbedplaceholder=tabbedplaceholder,plots=plots)
+    
+    if self.outfilename != None:
+      print 'write %s' %os.path.join(self.outpath,self.outfilename)            
+      fout=os.path.join(self.outpath,self.outfilename) 
+    else:
+      print 'write %s' %os.path.join(self.outpath,'loudness.html')            
+      fout=os.path.join(self.outpath,'loudness.html')
+    open(fout,'w').write(page)
+    return page     #not needed but usefull...
+
+</div></div>
+<div class="viewcode-block" id="cli"><a class="viewcode-back" href="../../loudnessPlotter.html#loudnessPlotter.loudness.cli">[docs]</a>def cli():
+  """ Simple command line interface. Process file or path, based on input args """
+  if we_are_frozen():
+    msg=''' loudnessPlotter : analyse and plot loudness in HTML\n usage: loudnessPlotter.py [inpath] [outpath]'''
+  else:
+    msg=''' loudnessPlotter : analyse and plot loudness in HTML\n usage: python loudness.py [inpath] [outpath]'''
+
+  if len(sys.argv) &gt; 1:
+    pass
+  else:
+    print msg
+    return 1      
+
+  inpath=os.path.abspath(sys.argv[1])
+  outpath=os.path.abspath(sys.argv[2])  
+  wavfilelist=[]
+  if os.path.isdir(inpath):
+    wavfilelist=glob.glob(os.path.join(inpath,'*.wav'))
+    print 'nb file to process: %s' %len(wavfilelist)     
+  elif os.path.isfile(inpath) and os.path.splitext(inpath)[1]=='.wav' :
+    wavfilelist.append(inpath)
+  else:
+    print msg
+    return 1
+    
+  loud=LoudnessPlotter(wavfilelist,outpath)
+  loud.process()  
+  </div>
+if __name__ == "__main__":
+  cli()
+</pre>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">loudnessPlotter 0.1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, seb@mikrolax.me.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
