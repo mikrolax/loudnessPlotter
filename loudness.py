@@ -7,7 +7,7 @@ import subprocess
 import glob
 import sys
 
-__version__='0.1.0'
+__version__='0.2.0'
 __author__='seb@mikrolax.me'
 
 
@@ -53,11 +53,6 @@ tpl_CDN='''<!DOCTYPE html>
       $htmlstats
       <div id="placeholder" style="width:900px;height:450px"></div>
       
-      <h4>Legend</h4> 
-      <dl class="dl-horizontal">
-        <dt> Y axis value : </dt><dd> LUFS </dd>
-        <dt> X axis value :</dt><dd> seconds </dd>
-      </dl>
             
     <footer>
       <hr>
@@ -76,53 +71,6 @@ tpl_CDN='''<!DOCTYPE html>
 
   </body></html>
 '''
-snippet='''
-  <div class="container">
-    <h3> $filename </h3><hr>
-      $htmlstats
-      <div id="placeholder" style="width:900px;height:450px"></div>
-      
-      <h4>Legend</h4> 
-      <dl class="dl-horizontal">
-        <dt> Y axis value : </dt><dd> LUFS </dd>
-        <dt> X axis value :</dt><dd> seconds </dd>
-      </dl>
-            
-    <footer>
-      <hr>
-      <p class="pull-right"> <a href="https://github.com/mikrolax/loudnessPlotter">loudnessPlotter</a> - 2012 </p>
-    </footer>
-  </div>
-  
-  <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-  <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/flot/0.7/jquery.flot.min.js"></script>  
-  <script language="javascript" type="text/javascript">
-  $(document).ready(function() {
-  $.plot($("#placeholder"), $datas,$options);
-  });
-  </script>'''
-
-snippet_multi='''
-  <div class="container">  
-  
-  $tabbedplaceholder  
-  
-  <footer>
-  <hr>
-  <p class="pull-right"> <a href="https://github.com/mikrolax/loudnessPlotter">loudnessPlotter</a> - 2012 </p>
-  </footer>
-  </div>  
-  <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-  <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/flot/0.7/jquery.flot.min.js"></script>
-<script language="javascript" type="text/javascript">
-$(document).ready(function() {
-
-$plots
-
-});
-</script>'''
 
 
 tpl_multi_fromCDN='''<!DOCTYPE html>
@@ -146,7 +94,7 @@ tpl_multi_fromCDN='''<!DOCTYPE html>
     <![endif]-->
   <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="excanvas.min.js"></script><![endif]-->
     <link rel="shortcut icon" href="favicon.ico">
-
+    
   </head>
   <body>
 
@@ -164,9 +112,7 @@ tpl_multi_fromCDN='''<!DOCTYPE html>
     </div>
     
   <div class="container">
-  
   $tabbedplaceholder
-  
   <footer>
   <hr>
   <p class="pull-right"> <a href="https://github.com/mikrolax/loudnessPlotter">loudnessPlotter</a> - 2012 </p>
@@ -181,9 +127,10 @@ $(document).ready(function() {
 $plots
 });
 </script>
-
-  </body></html>
+</body></html>
 '''
+    
+
 #for py2exe freezing support 
 def we_are_frozen():
   """Returns whether we are frozen via py2exe.
@@ -232,7 +179,10 @@ def writeHTML(loudnessdata,htmlout): #pass snippet?
   datas.append(Mdict)
   datas.append(Sdict)
   datas.append(Idict)
-  options='''{}'''
+  options='''{  series: {lines: {show: true, steps: true },points: { show: false },bars: { show: false }},
+  yaxis: { tickFormatter: function (v) { return v + " LUFS"; } },
+  xaxis: { tickFormatter: function (v) { return v + " s"; } },
+  legend: { position: 'se' }  }'''
   #if snippet ==True:
   #  s = Template(snippet)
   #  page=s.safe_substitute(filename=os.path.basename(htmlout),htmlstats=htmlstats,datas=datas,options=options) #,options=options  
@@ -259,7 +209,7 @@ def stats(loudnessdata):
       data=float(loudnessdata['M'][idx])
     except:
       #print loudnessdata['M'][idx] #weird => : 1.#F
-      data=-1.0
+      data=-100.0
       pass
     if data > maxVal:
       maxVal=data
@@ -279,7 +229,7 @@ def stats(loudnessdata):
       data=float(loudnessdata['S'][idx])
     except:
       #print loudnessdata['S'][idx]
-      data=-1.0
+      data=-100
       pass    
     if data > maxVal:
       maxVal=data
@@ -293,12 +243,10 @@ def stats(loudnessdata):
   try:
     data=float(loudnessdata['I'][0])
   except:
-    data=-1.0
+    data=-100.0
   stats['I']=data
-  
-  #import pprint
-  #pprint.pprint(stats)
-  stats['LRA']=LRA(loudnessdata)
+  #stats['LRA']=LRA(loudnessdata)
+  stats['LRA']=loudnessdata['LRA']
   return stats
 
 def parseLoudnessLog(filepath):
@@ -341,7 +289,7 @@ def HTMLstats(stats):
     elif key=='I':
       i='''<dt>Integrated</dt> <dd>'''+str(stats['I'])+''' LUFS</dd>'''
     elif key=='LRA':
-      lra='''<dt>Loudness RAnge</dt> <dd>'''+str(stats['LRA'])+''' LU</dd>'''    
+      lra='''<dt>Loudness Range</dt> <dd>'''+str(stats['LRA'])+''' LU</dd>'''    
     else:
       pass
   html+=m+s+i+lra    
@@ -375,26 +323,22 @@ def LRA(loudnessdata):
     if data > integrated+ relThreshold:
       relGated.append(data)  
   n=len(relGated)    
-  print n
   relGated.sort()
   idx=(n-1)*0.1+1  
   perclow=relGated[int(idx)]
   idx=(n-1)*0.95+1
   perchigh=relGated[int(idx)]
   lra=perchigh-perclow
-  print 'LRA: %s' %lra
   return lra
   
   
 class LoudnessPlotter(object):
   """ base class for launching executable, parse log and write output HTML file """
-  def __init__(self,filelist,outpath): #add OneFile=True
+  def __init__(self,filelist,outpath):
     """ init some self used value """
     self.filelist=filelist
     self.outpath=outpath
     self.loudnessdata={}
-    #print self.filelist
-    #print self.outpath
     self.toolspath=module_path()
     if sys.platform == 'win32':
       self.wavtoolpath=os.path.join(self.toolspath,'wave_analyze.exe')
@@ -402,7 +346,11 @@ class LoudnessPlotter(object):
       self.wavtoolpath=os.path.join(self.toolspath,'wave_analyze')
     self.processed=[]
     self.failed=[]
+    # options
     self.snippet=False
+    self.autoscale=True
+    self.outfilename=None
+    self.template=None
     
   def analyse(self):
     """ launch wave_analyze executable on each file of self.filelist putting stdout in a file 
@@ -411,6 +359,10 @@ class LoudnessPlotter(object):
     done=0
     for item in self.filelist:
       logfile=item+'_loudness.txt'
+      if len(self.filelist) > 1:
+        print 'loudness analyse :: %s :: %s' %(str(done*100/len(self.filelist)),os.path.basename(item))
+      #else:
+      #  print 'loudness analyse :: %s' %os.path.basename(item)
       if os.path.isfile(logfile):
         #print 'remove %s' %logfile
         os.remove(logfile)
@@ -429,23 +381,25 @@ class LoudnessPlotter(object):
         log.close()
       if error_mode>0:  
         self.failed.append(item)     
+        #print 'error analysing %s' %item
       else:       
         self.processed.append(item)  
       done+=1
-      print 'progress : %s ' %str(done*100/len(self.filelist))
+    for f in self.processed:
+      self.loudnessdata[os.path.basename(f)]=parseLoudnessLog(f+'_loudness.txt')
+      self.loudnessdata[os.path.basename(f)]['LRA']=LRA(self.loudnessdata[os.path.basename(f)])
+    return self.loudnessdata
         
   def process(self):
-    """ base function to parse and write HTML base on internal config """
+    """ base function to parse and write HTML based on internal config """
     if len(self.filelist)==0:
       print 'No file to process. Abort'
       return 1
     self.analyse() #fills self.processed else flot bugs (no data on one placeholder for width/height seems to affect them all)
-    for f in self.processed:
-      self.loudnessdata[os.path.basename(f)]=parseLoudnessLog(f+'_loudness.txt')
     if len(self.processed)==1:
       self.writeIndividual()
     else :  
-      self.write() 
+      return self.write() 
         
   def writeIndividual(self):
     """ write single HTML file for an individual file"""
@@ -490,19 +444,16 @@ class LoudnessPlotter(object):
       else:
         tabbedplaceholder+='''<div class="tab-pane" id="'''+name.replace(' ','')+'''">
         ''' 
-      #print tab  
-      tabbedplaceholder+=HTMLstats(stats(self.loudnessdata[tab]))+'''
-      <div id="'''+'placeholder'+name.replace(' ','')+'''" style="width:850px;height:450px"></div>
-      <h4>Legend</h4> 
-      <dl class="dl-horizontal">
-        <dt> Y axis value : </dt><dd> LUFS </dd>
-        <dt> X axis value :</dt><dd> seconds </dd>
-      </dl>
-      </div>'''  
+      #print tab
+      #only for min/max/average, do not compute LRA again        
+      tabbedplaceholder+=HTMLstats(stats(self.loudnessdata[tab]))+''' 
+      <div id="'''+'placeholder'+name.replace(' ','')+'''" style="width:1000px;height:450px"></div></div>'''  
       j+=1
     tabbedplaceholder+='''</div>
-    </div>
+    
+    </div> 
     '''    
+    
     plots=''
     for item in self.loudnessdata.keys():
       datas=[] #getData(self.loudnessdata[item])
@@ -530,10 +481,27 @@ class LoudnessPlotter(object):
       Idict={}
       Idict['label']='Integrated'
       Idict['data']=I  
+      
+      #Idict['points']={'show':'false'} 
+      #Idict['lines']={'show':'true'} 
+      #Idict['bars']={'show':'false','horizontal':'false'}
+      
       datas.append(Mdict)
       datas.append(Sdict)
       datas.append(Idict)
-      options='''{}'''
+      if self.autoscale==True:
+        options='''{
+              series: {lines: {show: true, steps: true },points: { show: false },bars: { show: false }},
+              yaxis: { tickFormatter: function (v) { return v + " LUFS"; } },
+              xaxis: { tickFormatter: function (v) { return v + " s"; } },
+              legend: { position: 'se' }}'''
+      else:
+        options='''{
+              series: {lines: {show: true, steps: true },points: { show: false },bars: { show: false }},
+              yaxis: { min:-70, max: 0, tickFormatter: function (v) { return v + " LUFS"; } },
+              xaxis: { tickFormatter: function (v) { return v + " s"; } },
+              legend: { position: 'se' }}'''
+
       name=os.path.splitext(os.path.basename(item))[0]
       plots+='''$.plot($("#placeholder'''+name.replace(' ','')+'''"), '''+str(datas)+''','''+options+''');             
              '''    
@@ -542,27 +510,38 @@ class LoudnessPlotter(object):
   def write(self):
     """ write single HTML file for a list of file"""  
     tabbedplaceholder,plots =self.getHtmlContent()
-    if self.snippet== True:
-      s = Template(snippet_multi)
-    else:
+    
+    if self.template != None and os.path.exists(self.template):
+      print 'using template file :  %s' %self.template
+      s = Template( open(self.template,'r').read() ) 
+    else:  
       s = Template(tpl_multi_fromCDN)
-    page=s.safe_substitute(tabbedplaceholder=tabbedplaceholder,plots=plots) #,options=options
-    print 'write %s' %os.path.join(self.outpath,'loudness.html')            
-    open(os.path.join(self.outpath,'loudness.html'),'w').write(page)
-    return page #not really needed...
+    #options=  
+    page=s.safe_substitute(tabbedplaceholder=tabbedplaceholder,plots=plots)
+    
+    if self.outfilename != None:
+      print 'write %s' %os.path.join(self.outpath,self.outfilename)            
+      fout=os.path.join(self.outpath,self.outfilename) 
+    else:
+      print 'write %s' %os.path.join(self.outpath,'loudness.html')            
+      fout=os.path.join(self.outpath,'loudness.html')
+    open(fout,'w').write(page)
+    return page     #not needed but usefull...
+
 
 def cli():
   """ Simple command line interface. Process file or path, based on input args """
   if we_are_frozen():
     msg=''' loudnessPlotter : analyse and plot loudness in HTML\n usage: loudnessPlotter.py [inpath] [outpath]'''
-  
   else:
     msg=''' loudnessPlotter : analyse and plot loudness in HTML\n usage: python loudness.py [inpath] [outpath]'''
+
   if len(sys.argv) > 1:
     pass
   else:
     print msg
     return 1      
+
   inpath=os.path.abspath(sys.argv[1])
   outpath=os.path.abspath(sys.argv[2])  
   wavfilelist=[]
@@ -574,6 +553,7 @@ def cli():
   else:
     print msg
     return 1
+    
   loud=LoudnessPlotter(wavfilelist,outpath)
   loud.process()  
   
