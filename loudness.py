@@ -9,6 +9,7 @@ import sys
 
 __version__='0.2.0'
 __author__='seb@mikrolax.me'
+__website__='http://mikrolax.github.com/loudnessPlotter'
 
 
 tpl_CDN='''<!DOCTYPE html>
@@ -56,7 +57,7 @@ tpl_CDN='''<!DOCTYPE html>
             
     <footer>
       <hr>
-      <p class="pull-right"> <a href="https://github.com/mikrolax/loudnessPlotter">loudnessPlotter</a> - 2012 </p>
+      <p class="pull-right"> <a href="http://mikrolax.github.com/loudnessPlotter">loudnessPlotter</a> - 2012 </p>
     </footer>
   </div>
   
@@ -115,7 +116,7 @@ tpl_multi_fromCDN='''<!DOCTYPE html>
   $tabbedplaceholder
   <footer>
   <hr>
-  <p class="pull-right"> <a href="https://github.com/mikrolax/loudnessPlotter">loudnessPlotter</a> - 2012 </p>
+  <p class="pull-right"> <a href="http://mikrolax.github.com/loudnessPlotter">loudnessPlotter</a> - 2012 </p>
   </footer>
   </div>
   
