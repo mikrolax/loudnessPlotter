@@ -1,10 +1,9 @@
 #loudnessPlotter
-*****************
 
-Analyse wave file loudness and plot graph in html.`loudnessPlotter` is based on ebu_r128 lib writen in C by [radionova labs](http://labs.radionova.no/2011/01/07/ebu-r128-library/). 
-Original source code is provided. Application is portable, i.e. can run off a USB key for instance.
 
-see [website](http://mikrolax.github.com/loudnessPlotter/) for more information.
+>Analyse wave file loudness and plot graph in html.`loudnessPlotter` is based on ebu_r128 lib writen in C by [radionova labs](http://labs.radionova.no/2011/01/07/ebu-r128-library/). 
+>Original source code is provided. Application is portable, i.e. can run off a USB key for instance.
+>See [website](http://mikrolax.github.com/loudnessPlotter/) for more information.
 
            
 
@@ -20,7 +19,6 @@ Zip downlod on [Github](https://github.com/mikrolax/loudnessPlotter/zipball/mast
 <br>
      
 ## Basic Usage
-********
 >Make sure you have the `wave_analyze` programm for your platform! See [documentation](http://mikrolax.github.com/loudnessPlotter/doc) for more information about usage, option, template etc...
 
 ### Windows  
@@ -50,9 +48,6 @@ If you specifie a wav file i.e. `wavfilename.wav`, output HTML file name will be
 <br>              
 <br>        
 
-
-
-
 ##Credits
 **********
 [radionova labs](http://labs.radionova.no/2011/01/07/ebu-r128-library/) for providing this lib and wave_analyze example under GNU GPL.
@@ -60,16 +55,8 @@ If you specifie a wav file i.e. `wavfilename.wav`, output HTML file name will be
 [flot](http://www.flotcharts.org/) an attactive javascript plotting for JQuery      
 [Bootstrap](http://twitter.github.com/bootstrap/) the famous CSS/JS framework from Twitter.        
 
-
 ##License
-**********
 [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.txt) 
-     
-
-## Contibuting  
-**********
-Fork on github, develop, and send me patch. Or contact me via e-mail.     
-
 
 <hr>   
 ###### Normatives, references   
