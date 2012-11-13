@@ -131,7 +131,7 @@ setup(
     'Programming Language :: Python',
     'Topic :: Multimedia :: Sound/Audio',
     'Topic :: Multimedia :: Sound/Audio :: Analysis',
-    'Topic :: Scientific/Engineering :: Visualization']  
+    'Topic :: Scientific/Engineering :: Visualization'],  
     #ext_package='ebu_r128',    
     #ext_modules=[wave_analyze], 
         
