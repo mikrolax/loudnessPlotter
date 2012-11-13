@@ -114,7 +114,7 @@ wave_analyze=Extension('wave_analyze',
 
 setup(
 
-    cmdclass={'clean_all': Clean,'test':Test,'tst_setup':TstSetup,'test_build':TstBuild,'sphinx_doc':SphinxDoc}, #'test':Test,
+    cmdclass={'clean_all': Clean,'tst':Test,'test_setup':TstSetup,'test_build':TstBuild,'sphinx_doc':SphinxDoc}, #'test':Test,
 
     name        ='loudnessplotter',
     version     =__version__,
