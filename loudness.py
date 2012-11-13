@@ -7,9 +7,11 @@ import subprocess
 import glob
 import sys
 
-__version__='0.2.0'
-__author__='seb@mikrolax.me'
-__website__='http://mikrolax.github.com/loudnessPlotter'
+__version__     ='0.2.1'
+__author__      ='seb a.k.a. mikrolax'
+__author_email__='seb@mikrolax.me'
+__url__='http://mikrolax.github.com/loudnessPlotter/'
+__download_url__='https://github.com/mikrolax/loudnessPlotter/zipball/master'
 
 
 tpl_CDN='''<!DOCTYPE html>
@@ -144,15 +146,14 @@ def module_path():
     return os.path.dirname(unicode(sys.executable, sys.getfilesystemencoding( )))
   else:
     return os.path.dirname(os.path.abspath(__file__))
-        
 
-def writeHTML(loudnessdata,htmlout): #pass snippet?
+#TODO: rewrite only 2 main module function : analyse() and write(). run() could do both.
+
+def writeHTML(loudnessdata,htmlout): 
   """    Write a single self-contained HTML page with graph. """
-  #print 'writeHTML %s' %os.getcwd()
   fout=open(htmlout+'.html','w')
   htmlstats=HTMLstats(stats(loudnessdata))
-
-  datas=[] # getData(self.loudnessdata)
+  datas=[] 
   M=[]
   S=[]
   I=[]
