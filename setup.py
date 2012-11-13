@@ -50,7 +50,7 @@ class Test(Command):
         import subprocess
         cmd='python test.py'
         returnCode=subprocess.call(cmd,shell=True)
-        self.assertEqual(returnCode,0)
+        assert returnCode==0, 'tst failed. error: %s' % returnCode
 
 
 class TstBuild(Command):
@@ -66,7 +66,7 @@ class TstBuild(Command):
         import subprocess
         cmd='python %s' %os.path.join('test','test_build.py')
         returnCode=subprocess.call(cmd,shell=True)
-        assert returnCode==0, 'test_build return error: %s' % returnCode
+        assert returnCode==0, 'test_build failed. error: %s' % returnCode
 
 class TstSetup(Command):
     description = "pass build test"
