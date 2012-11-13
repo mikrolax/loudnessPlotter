@@ -1,11 +1,10 @@
 #loudnessPlotter
-
+<hr>
 
 >Analyse wave file loudness and plot graph in html.`loudnessPlotter` is based on ebu_r128 lib writen in C by [radionova labs](http://labs.radionova.no/2011/01/07/ebu-r128-library/). 
 >Original source code is provided. Application is portable, i.e. can run off a USB key for instance.
 >See [website](http://mikrolax.github.com/loudnessPlotter/) for more information.
 
-           
 
 ### Download
 #####Using git
@@ -44,12 +43,9 @@ Generate a single HTML page (which itself load some javascript from the web): la
 
 If you specifie a folder, all .wav under this folder will be analysed, output HTML file name will be : `loudness.html`   
 If you specifie a wav file i.e. `wavfilename.wav`, output HTML file name will be : `wavfilename.html`      
-        
-<br>              
-<br>        
+       
 
 ##Credits
-**********
 [radionova labs](http://labs.radionova.no/2011/01/07/ebu-r128-library/) for providing this lib and wave_analyze example under GNU GPL.
 [JQuery](http://jquery.com/), the well-known javascript library   
 [flot](http://www.flotcharts.org/) an attactive javascript plotting for JQuery      
@@ -58,7 +54,7 @@ If you specifie a wav file i.e. `wavfilename.wav`, output HTML file name will be
 ##License
 [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.txt) 
 
-<hr>   
+<hr>
 ###### Normatives, references   
 [[1](https://en.wikipedia.org/wiki/Loudness)] Wikipedia page for loudness   
 [[2](https://en.wikipedia.org/wiki/Loudness_monitoring)] Wikipedia page for loudness monitoring     
