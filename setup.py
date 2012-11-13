@@ -1,82 +1,151 @@
 #/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from distutils.core import setup
-import zipfile
-import sys
+#import distribute_setup
+#distribute_setup.use_setuptools()
+
 import os
-import glob
+from distutils.core import setup,Extension,Command
 
-def zip_folder(folder_path, output_path):
-    """Zip the contents of an entire folder (with that folder included
-    in the archive). Empty subfolders will be included in the archive
-    as well.
-    """
-    #ZipFile.setpassword(pwd)
-    parent_folder = os.path.dirname(folder_path)                                      
-    contents = os.walk(folder_path)
-    try:
-        zip_file = zipfile.ZipFile(output_path, 'w', zipfile.ZIP_DEFLATED)
-        for root, folders, files in contents:
-            for folder_name in folders:
-                absolute_path = os.path.join(root, folder_name)
-                relative_path = absolute_path.replace(parent_folder,'')
-                zip_file.write(absolute_path, relative_path)
-            for file_name in files:
-                absolute_path = os.path.join(root, file_name)
-                relative_path = absolute_path.replace(parent_folder,'')
-                zip_file.write(absolute_path, relative_path)
-    except IOError, message:
-        print message
-    except OSError, message:
-        print message
-    except zipfile.BadZipfile, message:
-        print message
-    finally:
-        zip_file.close()
+import sys
+if sys.platform=='win32':
+  try:
+    import py2exe
+  except:
+    print 'Cannot import py2exe'
 
-def find_data_files(source,target,patterns):
-    """Locates the specified data-files and returns the matches
-    in a data_files compatible format.
+  
+__version__     =__import__('loudness').__version__
+__author__      =__import__('loudness').__author__
+__author_email__=__import__('loudness').__author_email__
+__url__         =__import__('loudness').__url__
+__download_url__=__import__('loudness').__download_url__
 
-    source is the root of the source data tree.
-        Use '' or '.' for current directory.
-    target is the root of the target data tree.
-        Use '' or '.' for the distribution directory.
-    patterns is a sequence of glob-patterns for the
-        files you want to copy.
-    """
-    if glob.has_magic(source) or glob.has_magic(target):
-        raise ValueError("Magic not allowed in src, target")
-    ret = {}
-    for pattern in patterns:
-        pattern = os.path.join(source,pattern)
-        for filename in glob.glob(pattern):
-            if os.path.isfile(filename):
-                targetpath = os.path.join(target,os.path.relpath(filename,source))
-                path = os.path.dirname(targetpath)
-                ret.setdefault(path,[]).append(filename)
 
-    return sorted(ret.items())
+class Clean(Command):
+    description = "custom clean command that forcefully removes dist & build directories"
+    user_options = []
+    def initialize_options(self):
+        self.cwd = None
+    def finalize_options(self):
+        self.cwd = os.getcwd()
+    def run(self):
+        assert os.getcwd() == self.cwd, 'Must be in package root: %s' % self.cwd
+        import shutil
+        shutil.rmtree(os.path.join(os.getcwd(),'dist'))
+        shutil.rmtree(os.path.join(os.getcwd(),'build'))
+        #shutil.rmtree(os.path.join(os.getcwd(),'MANIFEST'))
+        
+class Test(Command):
+    description = "pass loudnessPlotter testsuite"
+    user_options = []
+    def initialize_options(self):
+        self.cwd = None
+    def finalize_options(self):
+        self.cwd = os.getcwd()
+    def run(self):
+        assert os.getcwd() == self.cwd, 'Must be in package root: %s' % self.cwd
+        #os.system('rm -rf ./build ./dist') #use subprocess
+        import subprocess
+        cmd='python test.py'
+        returnCode=subprocess.call(cmd,shell=True)
+        self.assertEqual(returnCode,0)
 
+
+class TstBuild(Command):
+    description = "pass build test"
+    user_options = []
+    def initialize_options(self):
+        self.cwd = None
+    def finalize_options(self):
+        self.cwd = os.getcwd()
+    def run(self):
+        assert os.getcwd() == self.cwd, 'Must be in package root: %s' % self.cwd
+        #os.system('rm -rf ./build ./dist') #use subprocess
+        import subprocess
+        cmd='python %s' %os.path.join('test','test_build.py')
+        returnCode=subprocess.call(cmd,shell=True)
+        assert returnCode==0, 'test_build return error: %s' % returnCode
+
+class TstSetup(Command):
+    description = "pass build test"
+    user_options = []
+    def initialize_options(self):
+        self.cwd = None
+    def finalize_options(self):
+        self.cwd = os.getcwd()
+    def run(self):
+        assert os.getcwd() == self.cwd, 'Must be in package root: %s' % self.cwd
+        #os.system('rm -rf ./build ./dist') #use subprocess
+        import subprocess
+        cmd='python %s' %os.path.join('test','test_setup.py')
+        returnCode=subprocess.call(cmd,shell=True)
+        #assert returnCode==0, 'test_build return error: %s' % returnCode
+        
+
+class SphinxDoc(Command):
+    description = "pass build test"
+    user_options = []
+    def initialize_options(self):
+        self.cwd = None
+    def finalize_options(self):
+        self.cwd = os.getcwd()
+    def run(self):
+        assert os.getcwd() == self.cwd, 'Must be in package root: %s' % self.cwd
+        import subprocess
+        cmd='python %s' %os.path.join('test','test_doc.py')
+        returnCode=subprocess.call(cmd,shell=True)
+        assert returnCode==0
+
+
+'''wave_analyze=Extension('wave_analyze',
+                   include_dirs = [os.path.join('ebu_r128','includes')],
+                   sources = [os.path.join('ebu_r128','src','itu-1770-filter.c'),
+                              os.path.join('ebu_r128','src','ebu_r128.c'),
+                              os.path.join('ebu_r128','examples','wave','wave.c'),
+                              os.path.join('ebu_r128','examples','wave','main.c')])'''
+
+
+setup(
+    cmdclass={'clean_all': Clean,'test':Test,'tst_setup':TstSetup,'test_build':TstBuild,'sphinx_doc':SphinxDoc}, #'test':Test,
+    name        ='loudnessplotter',
+    version     =__version__,
+    author      =__author__,
+    author_email=__author_email__,
+    url         =__url__,
+    download_url=__download_url__,
+    license='GNU GPLv3',
+    long_description=open('README.md').read(),
+    classifiers=[
+    'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+    'Operating System :: OS Independent',
+    'Programming Language :: C',
+    'Programming Language :: Python',
+    'Topic :: Multimedia :: Sound/Audio',
+    'Topic :: Multimedia :: Sound/Audio :: Analysis',
+    'Topic :: Scientific/Engineering :: Visualization'],   
+
+    #ext_package='ebu_r128',    
+    #ext_modules=[wave_analyze], 
+        
+    py_modules=['loudness','test'], 
+
+    package_data = {
+        '': ['template_example.html'],
+        'doc': ['*.md'],
+        'ebu_r128': ['LICENSE','README','API' ]
+    },
+    #test_suite='tests'
+    #package_data={'ebu_r128': ['LICENSE','README','API' ]},    
+    data_files=[('', ['template_example.html']),
+                ('', ['wave_analyze.exe']), #not really....??
+                ('ebu_r128', ['example/*.c']),
+                ('ebu_r128', ['src/*.c']),
+                ('ebu_r128', ['include/*.h'])],
     
-if sys.platform == 'win32':
-  import py2exe
-  import loudness
-  #sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)),'Microsoft.VC90.CRT'))
-  setup(
-      name='loudnessPlotter',
-      version=loudness.__version__,
-      author=loudness.__author__,
-      options = {'py2exe': {'bundle_files': 1,'dist_dir':'bin/'}}, #, 'optimize': 2,
-      zipfile = None,
-      console=[{'script':'loudness.py'}], #,'icon_resources': [(0, "static/icon.ico")],
-      data_files = find_data_files('','',[
-                  'wave_analyze.exe'
-                  ]),      
-   )
-  if os.path.isfile(os.path.join('bin','loudnessPlotter.exe')):
-    os.remove(os.path.join('bin','loudnessPlotter.exe'))
-  os.rename(os.path.join('bin','loudness.exe'),os.path.join('bin','loudnessPlotter.exe'))  
-  zipname=u'loudnessPlotter-%s-win32.zip' %loudness.__version__ 
-  zip_folder(os.path.join(os.path.dirname(__file__),'bin'),os.path.join(os.path.abspath(os.path.dirname(__file__)),zipname)) 
+    #for py2exe
+    options ={'py2exe': {'bundle_files': 1,'dist_dir':'portable/'}},
+    zipfile = None,
+    console=[{'script':'loudness.py'}]               
+ )
+
