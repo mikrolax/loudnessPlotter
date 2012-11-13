@@ -1,6 +1,7 @@
 #/usr/bin/python
 # -*- coding: utf-8 -*-
 
+#try ?
 #import distribute_setup
 #distribute_setup.use_setuptools()
 
@@ -105,9 +106,16 @@ class SphinxDoc(Command):
                               os.path.join('ebu_r128','examples','wave','wave.c'),
                               os.path.join('ebu_r128','examples','wave','main.c')])'''
 
+wave_analyze=Extension('wave_analyze',
+                   include_dirs = [os.path.join('ebu_r128','includes')],
+                   sources = [os.path.join('ebu_r128','examples','wave','main.c'),
+                              os.path.join('ebu_r128','src','ebu_r128.c'),
+                              os.path.join('ebu_r128','src','itu-1770-filter.c')])
 
 setup(
+
     cmdclass={'clean_all': Clean,'test':Test,'tst_setup':TstSetup,'test_build':TstBuild,'sphinx_doc':SphinxDoc}, #'test':Test,
+
     name        ='loudnessplotter',
     version     =__version__,
     author      =__author__,
@@ -115,7 +123,7 @@ setup(
     url         =__url__,
     download_url=__download_url__,
     license='GNU GPLv3',
-    long_description=open('README.md').read(),
+    long_description=open('README.md').read(),    
     classifiers=[
     'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
     'Operating System :: OS Independent',
@@ -123,8 +131,7 @@ setup(
     'Programming Language :: Python',
     'Topic :: Multimedia :: Sound/Audio',
     'Topic :: Multimedia :: Sound/Audio :: Analysis',
-    'Topic :: Scientific/Engineering :: Visualization'],   
-
+    'Topic :: Scientific/Engineering :: Visualization']  
     #ext_package='ebu_r128',    
     #ext_modules=[wave_analyze], 
         
@@ -135,8 +142,10 @@ setup(
         'doc': ['*.md'],
         'ebu_r128': ['LICENSE','README','API' ]
     },
-    #test_suite='tests'
-    #package_data={'ebu_r128': ['LICENSE','README','API' ]},    
+    
+    #test_suite='tests' #distribute.setuptool
+    package_data={'ebu_r128': ['LICENSE','README','API' ]},  
+      
     data_files=[('', ['template_example.html']),
                 ('', ['wave_analyze.exe']), #not really....??
                 ('ebu_r128', ['example/*.c']),
@@ -146,6 +155,6 @@ setup(
     #for py2exe
     options ={'py2exe': {'bundle_files': 1,'dist_dir':'portable/'}},
     zipfile = None,
-    console=[{'script':'loudness.py'}]               
+    console=[{'script':'loudness.py'}]
  )
 

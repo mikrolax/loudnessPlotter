@@ -12,9 +12,9 @@ import test.test_generate
 import test.test_conformance
 import test.test_build
 import test.test_doc
-#import test.test_setup
 
-#import test.test_download   
+#import test.test_setup
+#import test.test_from_scratch   
 
 import loudness
 
