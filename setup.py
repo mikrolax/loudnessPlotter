@@ -139,12 +139,11 @@ setup(
 
     package_data = {
         '': ['template_example.html'],
-        'doc': ['*.md'],
         'ebu_r128': ['LICENSE','README','API' ]
     },
     
     #test_suite='tests' #distribute.setuptool
-    package_data={'ebu_r128': ['LICENSE','README','API' ]},  
+    #package_data={'ebu_r128': ['LICENSE','README','API' ]},  
       
     data_files=[('', ['template_example.html']),
                 ('', ['wave_analyze.exe']), #not really....??
