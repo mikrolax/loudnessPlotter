@@ -29,7 +29,7 @@ class SourceDocTest(unittest.TestCase):
       print line,
   
   def test_step2_build_sphinx_html(self):
-    options='-q -a -W '# warning as error, quiet mode
+    options='-q -a '# warning as error, quiet mode
     builddir= os.path.join(self.packagedir,'doc','source_doc')
     #filenames=[]
     cmd='sphinx-build %s %s %s ' %(options,self.sourcedir,builddir)
@@ -37,7 +37,7 @@ class SourceDocTest(unittest.TestCase):
     self.assertEqual(returnCode,0)
   
   def test_step3_build_sphinx_json(self): #also try singlehtml?
-    options='-a -q -W '# -q -W 
+    options='-a -q '# -q -W 
     builddir= os.path.join(self.packagedir,'test','tst_result','sphinx-json')
     #filenames=[]
     cmd='sphinx-build -b json %s %s %s ' %(options,self.sourcedir,builddir)
