@@ -69,7 +69,7 @@ class TstBuild(Command):
         assert returnCode==0, 'test_build failed. error: %s' % returnCode
 
 class TstSetup(Command):
-    description = "pass build test"
+    description = "pass this script test"
     user_options = []
     def initialize_options(self):
         self.cwd = None
@@ -85,7 +85,7 @@ class TstSetup(Command):
         
 
 class SphinxDoc(Command):
-    description = "pass build test"
+    description = "pass doc build test"
     user_options = []
     def initialize_options(self):
         self.cwd = None
@@ -105,12 +105,6 @@ class SphinxDoc(Command):
                               os.path.join('ebu_r128','src','ebu_r128.c'),
                               os.path.join('ebu_r128','examples','wave','wave.c'),
                               os.path.join('ebu_r128','examples','wave','main.c')])'''
-
-wave_analyze=Extension('wave_analyze',
-                   include_dirs = [os.path.join('ebu_r128','includes')],
-                   sources = [os.path.join('ebu_r128','examples','wave','main.c'),
-                              os.path.join('ebu_r128','src','ebu_r128.c'),
-                              os.path.join('ebu_r128','src','itu-1770-filter.c')])
 
 setup(
 
@@ -156,4 +150,6 @@ setup(
     zipfile = None,
     console=[{'script':'loudness.py'}]
  )
+
+
 
